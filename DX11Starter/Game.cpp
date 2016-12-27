@@ -250,24 +250,24 @@ void Game::Update(float deltaTime, float totalTime)
 {
 	if (GetAsyncKeyState(VK_UP))
 	{
-		(entities + 3)->Translate(+0.0, +2.0 * deltaTime, +0.0);
+		(entities + 3)->Translate(+0.0f, +2.0f * deltaTime, +0.0f);
 	}
 	if (GetAsyncKeyState(VK_RIGHT))
 	{
-		(entities + 3)->Translate(+2.0 * deltaTime, +0.0, +0.0);
+		(entities + 3)->Translate(+2.0f * deltaTime, +0.0f, +0.0f);
 	}
 	if (GetAsyncKeyState(VK_DOWN))
 	{
-		(entities + 3)->Translate(+0.0, -2.0 * deltaTime, +0.0);
+		(entities + 3)->Translate(+0.0f, -2.0f * deltaTime, +0.0f);
 	}
 	if (GetAsyncKeyState(VK_LEFT))
 	{
-		(entities + 3)->Translate(-2.0 * deltaTime, +0.0, +0.0);
+		(entities + 3)->Translate(-2.0f * deltaTime, +0.0, +0.0f);
 	}
 
-	(entities)->Translate(sin(totalTime*2)* deltaTime*5,0.0,0.0);
-	(entities + 1)->Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2, 0.0);
-	(entities + 2)->Translate(0.0, cos(totalTime)* deltaTime, 0.0);
+	(entities)->Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
+	(entities + 1)->Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
+	(entities + 2)->Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);
 
 	// Quit if the escape key is pressed
 	if (GetAsyncKeyState(VK_ESCAPE))
@@ -357,8 +357,8 @@ void Game::OnMouseMove(WPARAM buttonState, int x, int y)
 	}
 	else
 	{
-		distX = (x - prevMousePos.x)*-0.01;
-		distY = (y - prevMousePos.y)*0.01;
+		distX = (x - prevMousePos.x)*-0.01f;
+		distY = (y - prevMousePos.y)*0.01f;
 
 		printf("X dist:%f, Y dist:%f\n", distX,distY);
 		
@@ -382,7 +382,7 @@ void Game::OnMouseWheel(float wheelDelta, int x, int y)
 {
 	if(wheelDelta <0 )
 	{
-		XMVECTOR pos = XMVectorSet(viewMatrix._14 * -1, viewMatrix._24 * -1, (viewMatrix._34 + 0.1) * -1, 0);
+		XMVECTOR pos = XMVectorSet(viewMatrix._14 * -1.0f, viewMatrix._24 * -1.0f, (viewMatrix._34 + 0.1f) * -1.0f, 0.0f);
 		XMVECTOR dir = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR up = XMVectorSet(0, 1, 0, 0);
 		XMMATRIX V = XMMatrixLookToLH(
@@ -393,7 +393,7 @@ void Game::OnMouseWheel(float wheelDelta, int x, int y)
 	}
 	else if(wheelDelta >0)
 	{
-		XMVECTOR pos = XMVectorSet(viewMatrix._14 * -1, viewMatrix._24 * -1, (viewMatrix._34 - 0.1) * -1, 0);
+		XMVECTOR pos = XMVectorSet(viewMatrix._14 * -1.0f, viewMatrix._24 * -1.0f, (viewMatrix._34 - 0.1f) * -1.0f, 0.0f);
 		XMVECTOR dir = XMVectorSet(0, 0, 1, 0);
 		XMVECTOR up = XMVectorSet(0, 1, 0, 0);
 		XMMATRIX V = XMMatrixLookToLH(
