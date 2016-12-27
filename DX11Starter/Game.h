@@ -12,6 +12,7 @@
 #include "Material.h"
 #include "Lights.h"
 #include "WICTextureLoader.h"
+#include "TetrisBlock.h"
 
 class Game 
 	: public DXCore
@@ -46,6 +47,9 @@ private:
 	float newPosX;
 	float newPosY;
 
+	bool currentState;
+	bool previousState;
+
 	std::vector<GameEntity> entities;
 	Camera *mainCam = nullptr;
 	Renderer *render = nullptr;
@@ -55,6 +59,8 @@ private:
 	Material *greenMat = nullptr;
 	Material *blueMat = nullptr;
 	Material *purpleMat = nullptr;
+
+	TetrisBlock* block = nullptr;
 
 	DirectionalLight light1;
 	DirectionalLight light2;
@@ -83,6 +89,7 @@ private:
 	DirectX::XMFLOAT4X4 worldMatrix;
 	DirectX::XMFLOAT4X4 viewMatrix;
 	DirectX::XMFLOAT4X4 projectionMatrix;
+
 
 	// Keeps track of the old mouse position.  Useful for 
 	// determining how far the mouse moved in a single frame.

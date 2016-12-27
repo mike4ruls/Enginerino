@@ -67,6 +67,7 @@ Game::~Game()
 	if (greenMat != nullptr) { delete greenMat; greenMat = nullptr; }
 	if (blueMat != nullptr) { delete blueMat; blueMat = nullptr; }
 	if (purpleMat != nullptr) { delete purpleMat; purpleMat = nullptr; }
+	if (block != nullptr) { delete block; block = nullptr; }
 }
 
 // --------------------------------------------------------
@@ -99,7 +100,7 @@ void Game::Init()
 
 	//Texture time boisssss
 	//DirectX::CreateWICTextureFromFile(device,context,"",0,);
-	SVR = new SimpleSRV();
+	//SVR = new SimpleSRV();
 	//CreateWICTextureFromFile(*device, *context, L"Tetures/brick.jpg",0,);
 
 	//Wondering if i can make pointers to materials and switch the material whenever
@@ -110,6 +111,14 @@ void Game::Init()
 	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
 	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
 
+	block = new TetrisBlock(*cube,*blueMat,2,2);
+
+	entities = block->GetEntities();
+
+	currentState = false;
+	previousState = false;
+
+	/*
 	entities.push_back(GameEntity(*helix, "Square", *defaultMat));
 	entities.push_back(GameEntity(*torus, "Square", *defaultMat));
 	entities.push_back(GameEntity(*cylinder, "Pentagon", *defaultMat));
@@ -121,7 +130,7 @@ void Game::Init()
 	//(entities)[0].LoadMaterial(*purpleMat);
 	(entities)[1].LoadMaterial(*redMat);
 	(entities)[2].LoadMaterial(*blueMat);
-	(entities)[3].LoadMaterial(*greenMat);
+	(entities)[3].LoadMaterial(*greenMat);*/
 
 	render = new Renderer(entities, *vertexShader, *pixelShader);
 
@@ -304,8 +313,23 @@ void Game::OnResize()
 void Game::Update(float deltaTime, float totalTime)
 {
 	mainCam->Update(deltaTime);
-
-	
+	if (GetAsyncKeyState(VK_UP))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			block->rot += 1;
+			block->LoadTetrisBlock();
+		}
+	}
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			block->type += 1;
+			block->LoadTetrisBlock();
+		}
+	}
+	/*
 	if (GetAsyncKeyState(VK_UP))
 	{
 		(entities)[3].Translate(+0.0f, +2.0f * deltaTime, +0.0f);
@@ -325,11 +349,15 @@ void Game::Update(float deltaTime, float totalTime)
 
 	(entities)[0].Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
 	(entities)[1].Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
-	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);
-
+	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);*/
+	previousState = currentState;
+	entities.clear();
+	entities = block->GetEntities();
+	currentState = false;
 	// Quit if the escape key is pressed
 	if (GetAsyncKeyState(VK_ESCAPE))
 		Quit();
+
 }
 
 // --------------------------------------------------------

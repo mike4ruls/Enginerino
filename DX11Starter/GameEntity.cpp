@@ -82,6 +82,18 @@ void GameEntity::SetScale(XMFLOAT3 sca)
 	scale = sca;
 }
 
+void GameEntity::ResetEntity()
+{
+	position = { 0.0f,0.0f,0.0f };
+	rotation = { 0.0f,0.0f,0.0f };
+	scale = { 1.0f,1.0f,1.0f };
+
+	XMMATRIX W = XMMatrixIdentity();
+	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(W));
+
+	SetWorldMatrix();
+}
+
 
 
 ///

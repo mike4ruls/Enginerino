@@ -26,6 +26,8 @@ public:
 	void SetRotation(DirectX::XMFLOAT3 rot);
 	void SetScale(DirectX::XMFLOAT3 sca);
 
+	void ResetEntity();
+
 	//Transformation Methods
 	void Translate(float x, float y, float z);
 	void Rotate(float x, float y, float z);
