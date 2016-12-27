@@ -1,8 +1,19 @@
-﻿  compilation object save succeeded; see C:\Users\Michael\Desktop\CompFolder\GRAPHICS\IGME 540\Starter Code\DX11Starter\Debug\PixelShader.cso
-  compilation object save succeeded; see C:\Users\Michael\Desktop\CompFolder\GRAPHICS\IGME 540\Starter Code\DX11Starter\Debug\VertexShader.cso
+﻿  compilation object save succeeded; see G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter(old5)\Debug\PixelShader.cso
+  compilation object save succeeded; see G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter(old5)\Debug\VertexShader.cso
   SimpleShader.cpp
+  Renderer.cpp
+  Mesh.cpp
   Main.cpp
+  GameEntity.cpp
   Game.cpp
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(253): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(257): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(261): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(265): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(360): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(361): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(385): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+g:\programming\graphics engine\dx11starter(old5)\game.cpp(396): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   DXCore.cpp
   Generating Code...
-  DX11Starter.vcxproj -> C:\Users\Michael\Desktop\CompFolder\GRAPHICS\IGME 540\Starter Code\DX11Starter\Debug\DX11Starter.exe
+  DX11Starter.vcxproj -> G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter(old5)\Debug\DX11Starter.exe

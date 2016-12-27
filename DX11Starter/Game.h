@@ -1,8 +1,12 @@
 #pragma once
 
+#include <iostream>
 #include "DXCore.h"
 #include "SimpleShader.h"
 #include <DirectXMath.h>
+#include "Renderer.h"
+#include "GameEntity.h"
+#include "Mesh.h"
 
 class Game 
 	: public DXCore
@@ -31,9 +35,22 @@ private:
 	void CreateMatrices();
 	void CreateBasicGeometry();
 
+	GameEntity *entities;
+	Renderer *render;
+
+	bool noClick;
+	float distX;
+	float distY;
+	float newPosX;
+	float newPosY;
+
+	Mesh *obj1;
+	Mesh *obj2;
+	Mesh *obj3;
+
 	// Buffers to hold actual geometry data
-	ID3D11Buffer* vertexBuffer;
-	ID3D11Buffer* indexBuffer;
+	//ID3D11Buffer* vertexBuffer;
+	//ID3D11Buffer* indexBuffer;
 
 	// Wrappers for DirectX shaders to provide simplified functionality
 	SimpleVertexShader* vertexShader;
