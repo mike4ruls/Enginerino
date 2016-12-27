@@ -1,5 +1,43 @@
-﻿  Game.cpp
-j:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-j:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-  DX11Starter.vcxproj -> J:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\x64\Debug\DX11Starter.exe
-  DX11Starter.vcxproj -> J:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\x64\Debug\DX11Starter.pdb (Full PDB)
+﻿  compilation object save succeeded; see G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\x64\Debug\PixelShader.cso
+G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\VertexShader.hlsl(85,13-38): warning X3206: 'mul': implicit truncation of vector type
+G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\VertexShader.hlsl(62,18-45): warning X3578: 'main': Top-level return value is not completely initialized
+G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\VertexShader.hlsl(62,18-45): warning X3578: 'main': Top-level return value is not completely initialized
+G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\VertexShader.hlsl(62,18-45): warning X3578: Output value 'main' is not completely initialized
+  
+  compilation object save succeeded; see G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\x64\Debug\VertexShader.cso
+  TetrisBlock.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Tetris.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  SimpleShader.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.cpp(123): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.cpp(135): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.cpp(681): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.cpp(741): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.cpp(1310): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+  Renderer.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Mesh.cpp
+g:\programming\graphics engine\dx11starter\mesh.cpp(137): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Material.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Main.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  GameEntity.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Game.cpp
+g:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+g:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  DXCore.cpp
+g:\programming\graphics engine\dx11starter\dxcore.cpp(383): warning C4244: 'return': conversion from 'WPARAM' to 'HRESULT', possible loss of data
+  Camera.cpp
+  Generating Code...
+g:\programming\graphics engine\dx11starter\tetris.cpp(146): error C4703: potentially uninitialized local pointer variable 'block' used

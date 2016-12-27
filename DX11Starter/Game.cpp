@@ -354,6 +354,8 @@ void Game::Update(float deltaTime, float totalTime)
 	(entities)[0].Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
 	(entities)[1].Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
 	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);*/
+
+	(tetrisGame)->UpdateGame();
 	
 	previousState = currentState;
 	entities.clear();

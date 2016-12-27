@@ -11,11 +11,58 @@ Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p)
 	purple = &p;
 	gameStart = false;
 	
+	currentState = false;
+	previousState = false;
+	tTime = 0.0;
+	timeOfDescent = 4.0;
+	srand((unsigned int)time(NULL));
 }
 
 
 Tetris::~Tetris()
 {
+}
+void Tetris::UpdateGame()
+{
+	if (GetAsyncKeyState(VK_RETURN))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			currentBlock->rot += 1;
+		}
+	}
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			currentBlock->TransTetrisBlock(-1.0,0.0,0.0);
+		}
+	}
+	if (GetAsyncKeyState(VK_RIGHT))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			currentBlock->TransTetrisBlock(1.0, 0.0, 0.0);
+		}
+	}
+	if (GetAsyncKeyState(VK_DOWN))
+	{
+		currentState = true;
+		currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
+		tTime = 0.0;
+	}
+
+	if(tTime >=timeOfDescent)
+	{
+		currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
+		tTime = 0.0;
+	}
+
+	tTime += (float)0.1;
+	previousState = currentState;
+	(currentBlock)->LoadTetrisBlock();
+	SetFutureBlock();
+	currentState = false;
 }
 void Tetris::StartGame(int h, int w)
 {
@@ -59,7 +106,7 @@ void Tetris::DrawBoard(int height, int width)
 TetrisBlock* Tetris::GenerateBlock()
 {
 	TetrisBlock* block;
-	int ranBlock = rand() %6;
+	int ranBlock = rand() % 6 + 1;
 	switch(ranBlock)
 	{
 	case 1:
@@ -128,4 +175,11 @@ std::vector<GameEntity> Tetris::GetBlocks()
 	}
 
 	return blockEntities;
+}
+void Tetris::SetFutureBlock()
+{
+	int newH = (int)(height/2);
+	int newW = (int)width + 5;
+	(futureBlock)->translation = { (float)newW,(float)newH,0.0 };
+	(futureBlock)->LoadTetrisBlock();
 }

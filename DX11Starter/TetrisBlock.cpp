@@ -253,12 +253,22 @@ void TetrisBlock::LoadTetrisBlock()
 		break;
 	}
 	}
-	TransTetrisBlock(translation.x, translation.y, translation.z);
+	TransTetrisBlock(translation);
 }
 void TetrisBlock::TransTetrisBlock(float x, float y, float z)
 {
 	for (int i = 0; i < (int)(tetrisBlocks).size(); i++)
 	{
-		(tetrisBlocks)[i].Translate(translation.x, translation.y, translation.z);
+		(tetrisBlocks)[i].Translate(x, y, z);
+	}
+	translation.x += x;
+	translation.y += y;
+	translation.z += z;
+}
+void TetrisBlock::TransTetrisBlock(DirectX::XMFLOAT3 trans)
+{
+	for (int i = 0; i < (int)(tetrisBlocks).size(); i++)
+	{
+		(tetrisBlocks)[i].Translate(trans.x, trans.y, trans.z);
 	}
 }

@@ -28,6 +28,7 @@ public:
 
 	void LoadTetrisBlock();
 	void TransTetrisBlock(float x, float y, float z);
+	void TransTetrisBlock(DirectX::XMFLOAT3 trans);
 	std::vector<GameEntity> GetEntities();
 
 
