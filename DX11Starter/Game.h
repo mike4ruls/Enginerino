@@ -13,6 +13,7 @@
 #include "Lights.h"
 #include "WICTextureLoader.h"
 #include "TetrisBlock.h"
+#include "Tetris.h"
 
 class Game 
 	: public DXCore
@@ -61,6 +62,7 @@ private:
 	Material *purpleMat = nullptr;
 
 	TetrisBlock* block = nullptr;
+	Tetris* tetrisGame = nullptr;
 
 	DirectionalLight light1;
 	DirectionalLight light2;

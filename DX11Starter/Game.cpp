@@ -68,6 +68,7 @@ Game::~Game()
 	if (blueMat != nullptr) { delete blueMat; blueMat = nullptr; }
 	if (purpleMat != nullptr) { delete purpleMat; purpleMat = nullptr; }
 	if (block != nullptr) { delete block; block = nullptr; }
+	if (tetrisGame != nullptr) { delete tetrisGame; tetrisGame = nullptr; }
 }
 
 // --------------------------------------------------------
@@ -111,6 +112,8 @@ void Game::Init()
 	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
 	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
 
+	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat);
+
 	block = new TetrisBlock(*cube,*blueMat,2,2);
 
 	entities = block->GetEntities();
@@ -132,8 +135,8 @@ void Game::Init()
 	(entities)[2].LoadMaterial(*blueMat);
 	(entities)[3].LoadMaterial(*greenMat);*/
 
-	render = new Renderer(entities, *vertexShader, *pixelShader);
-
+	render = new Renderer(entities,*tetrisGame, *vertexShader, *pixelShader);
+	(tetrisGame)->StartGame(30, 10);
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
@@ -313,6 +316,7 @@ void Game::OnResize()
 void Game::Update(float deltaTime, float totalTime)
 {
 	mainCam->Update(deltaTime);
+	
 	if (GetAsyncKeyState(VK_UP))
 	{
 		currentState = true;
@@ -350,6 +354,7 @@ void Game::Update(float deltaTime, float totalTime)
 	(entities)[0].Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
 	(entities)[1].Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
 	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);*/
+	
 	previousState = currentState;
 	entities.clear();
 	entities = block->GetEntities();
