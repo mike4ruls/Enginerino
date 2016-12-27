@@ -1,0 +1,5 @@
+﻿  Game.cpp
+j:\programming\graphics engine\dx11starter\simpleshader.h(104): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+j:\programming\graphics engine\dx11starter\simpleshader.h(108): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  DX11Starter.vcxproj -> J:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\x64\Debug\DX11Starter.exe
+  DX11Starter.vcxproj -> J:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\x64\Debug\DX11Starter.pdb (Full PDB)
