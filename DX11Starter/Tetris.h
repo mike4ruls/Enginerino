@@ -16,6 +16,7 @@ public:
 	TetrisBlock* GenerateBlock();
 	std::vector<GameEntity> GetBoard();
 	std::vector<GameEntity> GetBlocks();
+	void SetCurrentBlock(TetrisBlock *block);
 	void SetFutureBlock();
 	void MoveBlock();
 	void CheckWallCollide();

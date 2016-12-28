@@ -117,10 +117,7 @@ TetrisBlock* Tetris::GenerateBlock()
 		break;
 	}
 	}
-	int newH = height - 1;
-	int newW = (int)(width / 2);
-	(block)->translation = {(float)newW,(float)newH,0.0};
-	(block)->LoadTetrisBlock();
+	SetCurrentBlock(block);
 	return block;
 }
 std::vector<GameEntity> Tetris::GetBoard()
@@ -152,6 +149,13 @@ std::vector<GameEntity> Tetris::GetBlocks()
 	}
 
 	return blockEntities;
+}
+void Tetris::SetCurrentBlock(TetrisBlock *block)
+{
+	int newH = height - 1;
+	int newW = (int)(width / 2);
+	(block)->translation = { (float)newW,(float)newH,0.0 };
+	(block)->LoadTetrisBlock();
 }
 void Tetris::SetFutureBlock()
 {
@@ -223,6 +227,10 @@ void Tetris::CheckFloorCollide()
 		if ((currentBlock)->GetEntities()[i].GetPosition().y <= board[1].GetPosition().y - 1)
 		{
 			(currentBlock)->TransTetrisBlock(0.0, 1.0, 0.0);
+			tBlocks.push_back(currentBlock);
+			currentBlock = futureBlock;
+			futureBlock = GenerateBlock();
+			SetCurrentBlock(currentBlock);
 		}
 	}
 }
