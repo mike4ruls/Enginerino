@@ -21,42 +21,19 @@ Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p)
 
 Tetris::~Tetris()
 {
+	if (currentBlock != nullptr) { delete currentBlock; currentBlock = nullptr; }
+	if (futureBlock != nullptr) { delete futureBlock; futureBlock = nullptr; }
+
+	for (int i = 0; i < (int)(tBlocks).size(); i++)
+	{
+		if (tBlocks[i] != nullptr) { delete tBlocks[i]; tBlocks[i] = nullptr; }
+	}
 }
 void Tetris::UpdateGame()
 {
-	if (GetAsyncKeyState(VK_RETURN))
-	{
-		currentState = true;
-		if (currentState != previousState) {
-			currentBlock->rot += 1;
-		}
-	}
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		currentState = true;
-		if (currentState != previousState) {
-			currentBlock->TransTetrisBlock(-1.0,0.0,0.0);
-		}
-	}
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		currentState = true;
-		if (currentState != previousState) {
-			currentBlock->TransTetrisBlock(1.0, 0.0, 0.0);
-		}
-	}
-	if (GetAsyncKeyState(VK_DOWN))
-	{
-		currentState = true;
-		currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
-		tTime = 0.0;
-	}
-
-	if(tTime >=timeOfDescent)
-	{
-		currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
-		tTime = 0.0;
-	}
+	MoveBlock();
+	CheckWallCollide();
+	CheckFloorCollide();
 
 	tTime += (float)0.1;
 	previousState = currentState;
@@ -182,4 +159,70 @@ void Tetris::SetFutureBlock()
 	int newW = (int)width + 5;
 	(futureBlock)->translation = { (float)newW,(float)newH,0.0 };
 	(futureBlock)->LoadTetrisBlock();
+}
+void Tetris::MoveBlock()
+{
+	if (GetAsyncKeyState(VK_RETURN))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			currentBlock->rot += 1;
+		}
+	}
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			currentBlock->TransTetrisBlock(-1.0, 0.0, 0.0);
+		}
+	}
+	if (GetAsyncKeyState(VK_RIGHT))
+	{
+		currentState = true;
+		if (currentState != previousState) {
+			currentBlock->TransTetrisBlock(1.0, 0.0, 0.0);
+		}
+	}
+	if (GetAsyncKeyState(VK_DOWN))
+	{
+		currentState = true;
+		currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
+		tTime = 0.0;
+	}
+
+	if (tTime >= timeOfDescent)
+	{
+		currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
+		tTime = 0.0;
+	}
+}
+void Tetris::CheckWallCollide()
+{
+	for (int i = 0; i < (int)(currentBlock)->GetEntities().size(); i++)
+	{
+		if ((currentBlock)->GetEntities()[i].GetPosition().x <= board[1].GetPosition().x)
+		{
+			(currentBlock)->TransTetrisBlock(1.0, 0.0, 0.0);
+			//(currentBlock)->LoadTetrisBlock();
+			//CheckWallCollide();
+			//break;
+		}
+		else if ((currentBlock)->GetEntities()[i].GetPosition().x >= board[1].GetPosition().x + (width + 1))
+		{
+			(currentBlock)->TransTetrisBlock(-1.0,0.0,0.0);
+			//(currentBlock)->LoadTetrisBlock();
+			//CheckWallCollide();
+			//break;
+		}
+	}
+}
+void Tetris::CheckFloorCollide()
+{
+	for (int i = 0; i < (int)(currentBlock)->GetEntities().size(); i++)
+	{
+		if ((currentBlock)->GetEntities()[i].GetPosition().y <= board[1].GetPosition().y - 1)
+		{
+			(currentBlock)->TransTetrisBlock(0.0, 1.0, 0.0);
+		}
+	}
 }

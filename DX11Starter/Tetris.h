@@ -17,6 +17,9 @@ public:
 	std::vector<GameEntity> GetBoard();
 	std::vector<GameEntity> GetBlocks();
 	void SetFutureBlock();
+	void MoveBlock();
+	void CheckWallCollide();
+	void CheckFloorCollide();
 	
 	Mesh* shapeBlock;
 	Material* red;
@@ -24,8 +27,8 @@ public:
 	Material* green;
 	Material* purple;
 
-	TetrisBlock* futureBlock;
-	TetrisBlock* currentBlock;
+	TetrisBlock* futureBlock = nullptr;
+	TetrisBlock* currentBlock = nullptr;
 
 	bool gameStart;
 	int height;

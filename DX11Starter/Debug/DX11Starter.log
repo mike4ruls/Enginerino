@@ -1,18 +1,2 @@
-﻿  compilation object save succeeded; see C:\Users\Michael\Desktop\ENGINE\GRAPHICSENGINE\DX11Starter(old)\Debug\PixelShader.cso
-C:\Users\Michael\Desktop\ENGINE\GRAPHICSENGINE\DX11Starter(old)\VertexShader.hlsl(85,13-38): warning X3206: 'mul': implicit truncation of vector type
-C:\Users\Michael\Desktop\ENGINE\GRAPHICSENGINE\DX11Starter(old)\VertexShader.hlsl(62,18-45): warning X3578: Output value 'main' is not completely initialized
-  
-  compilation object save succeeded; see C:\Users\Michael\Desktop\ENGINE\GRAPHICSENGINE\DX11Starter(old)\Debug\VertexShader.cso
-  TetrisBlock.cpp
-  Tetris.cpp
-  SimpleShader.cpp
-  Renderer.cpp
-  Mesh.cpp
-  Material.cpp
-  Main.cpp
-  GameEntity.cpp
-  Game.cpp
-  DXCore.cpp
-  Camera.cpp
-  Generating Code...
-  DX11Starter.vcxproj -> C:\Users\Michael\Desktop\ENGINE\GRAPHICSENGINE\DX11Starter(old)\Debug\DX11Starter.exe
+﻿  Tetris.cpp
+  DX11Starter.vcxproj -> G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\Debug\DX11Starter.exe
