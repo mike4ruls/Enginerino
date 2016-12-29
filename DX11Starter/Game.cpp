@@ -112,7 +112,7 @@ void Game::Init()
 	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
 	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
 
-	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat, *render);
+	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat);
 
 	block = new TetrisBlock(*cube,*blueMat,2,2);
 
@@ -135,9 +135,7 @@ void Game::Init()
 	(entities)[2].LoadMaterial(*blueMat);
 	(entities)[3].LoadMaterial(*greenMat);*/
 
-	render = new Renderer(entities, *vertexShader, *pixelShader);
-	(tetrisGame)->StartGame(30, 10);
-	render->board = (tetrisGame)->GetBoard();
+	render = new Renderer(entities, *vertexShader, *pixelShader, *tetrisGame);
 	//render->tBlocks = (tetrisGame)->GetTBlocks();
 	//render->pBlocks = (tetrisGame)->GetPBlocks();
 	// Tell the input assembler stage of the pipeline what kind of
@@ -357,22 +355,43 @@ void Game::Update(float deltaTime, float totalTime)
 	(entities)[0].Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
 	(entities)[1].Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
 	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);*/
+	if (tetrisGame->gameStart) {
+		(tetrisGame)->UpdateGame();
+		if (tetrisGame->tChange)
+		{
+			render->tBlocks = (tetrisGame)->GetTBlocks();
+			tetrisGame->tChange = false;
+		}
+		if (tetrisGame->pChange)
+		{
+			render->pBlocks = (tetrisGame)->GetPBlocks();
+			tetrisGame->pChange = false;
+		}
 
-	(tetrisGame)->UpdateGame();
-	if (tetrisGame->tChange)
-	{
-		render->tBlocks = (tetrisGame)->GetTBlocks();
-		tetrisGame->tChange = false;
+		// End Game
+		if (GetAsyncKeyState('U'))
+		{
+			(tetrisGame)->gameStart = false;
+		}
+		// Reset Game
+		if (GetAsyncKeyState('I'))
+		{
+			(tetrisGame)->StartGame(30, 10);
+		}
 	}
-	if(tetrisGame->pChange)
+	else
 	{
-		render->pBlocks = (tetrisGame)->GetPBlocks();
-		tetrisGame->pChange = false;
+		// Start game
+		if (GetAsyncKeyState('Y'))
+		{
+			(tetrisGame)->StartGame(30, 10);
+			render->board = (tetrisGame)->GetBoard();
+		}
 	}
 	
 	previousState = currentState;
-	entities.clear();
-	entities = block->GetEntities();
+	//entities.clear();
+	//entities = block->GetEntities();
 	currentState = false;
 	// Quit if the escape key is pressed
 	if (GetAsyncKeyState(VK_ESCAPE))

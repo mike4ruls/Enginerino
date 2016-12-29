@@ -2,14 +2,13 @@
 
 
 
-Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Renderer &ren)
+Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p)
 {
 	shapeBlock = &shape;
 	red = &r;
 	blue = &b;
 	green = &g;
 	purple = &p;
-	rend = &ren;
 	gameStart = false;
 	gameOver = false;
 	score = 0;
@@ -50,11 +49,7 @@ void Tetris::UpdateGame()
 	}
 	else
 	{
-		if(gameStart == true)
-		{
-			StartGame(height, width);
-			gameOver = false;
-		}
+
 	}
 }
 void Tetris::StartGame(int h, int w)
@@ -69,6 +64,7 @@ void Tetris::StartGame(int h, int w)
 	gameStart = true;
 	tChange = true;
 	pChange = true;
+	gameOver = false;
 
 }
 

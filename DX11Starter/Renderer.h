@@ -6,6 +6,7 @@
 #include "SimpleShader.h"
 #include "Lights.h"
 #include "Camera.h"
+#include "Tetris.h"
 
 class Renderer
 {
@@ -14,7 +15,9 @@ public:
 	SimpleVertexShader* vertexShader;
 	SimplePixelShader* pixelShader;
 
-	Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader);
+	Tetris* TetrisGame;
+
+	Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, Tetris &Tet);
 	~Renderer();
 
 	bool gotBoard;

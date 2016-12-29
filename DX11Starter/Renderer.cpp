@@ -2,11 +2,12 @@
 
 
 using namespace DirectX;
-Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader)
+Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, Tetris &Tet)
 {
 	entities = &en;
 	vertexShader = &vShader;
 	pixelShader = &pShader;
+	TetrisGame = &Tet;
 	gotBoard = false;
 }
 
@@ -17,7 +18,7 @@ Renderer::~Renderer()
 }
 void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, DirectionalLight light, DirectionalLight light2)
 {
-
+	if (TetrisGame->gameStart == true) {
 		for (int i = 0; i < (int)board.size(); i++)
 		{
 
@@ -136,15 +137,14 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 			pBlocks[i].Draw(context);
 		}
 	}
-	
 	/*
 	for(int i= 0; i < (int)(*entities).size(); i++)
 	{
-		
+
 		// Send data to shader variables
 		//  - Do this ONCE PER OBJECT you're drawing
 		//  - This is actually a complex process of copying data to a local buffer
-		//    and then copying that entire buffer to the GPU.  
+		//    and then copying that entire buffer to the GPU.
 		//  - The "SimpleShader" class handles all of that for you.
 		vertexShader->SetMatrix4x4("world", (*entities)[i].GetWorldMatrix());
 		vertexShader->SetMatrix4x4("view", cam.viewMatrix);
@@ -165,7 +165,7 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 		//  - These don't technically need to be set every frame...YET
 		//  - Once you start applying different shaders to different objects,
 		//    you'll need to swap the current shaders before each draw
-		
+
 
 		vertexShader->SetShader();
 		pixelShader->SetShader();
@@ -174,9 +174,10 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 		//  - Do this ONCE PER OBJECT you're drawing, since each object might
 		//    have different geometry.
 		//(entities + i)->PrepareMaterial(viewMatrix, projectionMatrix);
-		
+
 		(*entities)[i].Draw(context);
 	}*/
+}
 	
 
 

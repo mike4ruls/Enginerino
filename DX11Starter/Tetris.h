@@ -1,14 +1,13 @@
 #pragma once
 #include "GameEntity.h"
 #include "TetrisBlock.h"
-#include "Renderer.h"
 #include <stdlib.h>
 #include <time.h>
 
 class Tetris
 {
 public:
-	Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Renderer &ren);
+	Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p);
 	~Tetris();
 
 	void StartGame(int h, int w);
@@ -36,8 +35,6 @@ public:
 	Material* blue;
 	Material* green;
 	Material* purple;
-
-	Renderer* rend;
 
 	TetrisBlock* futureBlock = nullptr;
 	TetrisBlock* currentBlock = nullptr;
