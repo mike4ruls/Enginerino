@@ -20,7 +20,10 @@ public:
 	void SetFutureBlock();
 	void MoveBlock();
 	void CheckWallCollide();
+	void CheckBlockCollide();
 	void CheckFloorCollide();
+	void PlaceBlock();
+	void CheckForLine();
 	
 	Mesh* shapeBlock;
 	Material* red;
@@ -41,7 +44,7 @@ public:
 	bool previousState;
 	
 	std::vector<GameEntity> board;
-	std::vector<TetrisBlock*> tBlocks;
+	std::vector<GameEntity> tBlocks;
 
 private:
 

@@ -24,15 +24,12 @@ Tetris::~Tetris()
 	if (currentBlock != nullptr) { delete currentBlock; currentBlock = nullptr; }
 	if (futureBlock != nullptr) { delete futureBlock; futureBlock = nullptr; }
 
-	for (int i = 0; i < (int)(tBlocks).size(); i++)
-	{
-		if (tBlocks[i] != nullptr) { delete tBlocks[i]; tBlocks[i] = nullptr; }
-	}
 }
 void Tetris::UpdateGame()
 {
 	MoveBlock();
 	CheckWallCollide();
+	CheckBlockCollide();
 	CheckFloorCollide();
 
 	tTime += (float)0.1;
@@ -132,10 +129,7 @@ std::vector<GameEntity> Tetris::GetBlocks()
 	//Gets placed blocks
 	for (int i = 0; i < (int)(tBlocks).size(); i++)
 	{
-		for (int j = 0; j < (int)((tBlocks)[i]->GetEntities()).size(); j++)
-		{
-			blockEntities.push_back(((tBlocks)[i]->GetEntities())[j]);
-		}
+		blockEntities.push_back((tBlocks)[i]);
 	}
 	//Gets current block falling
 	for (int i = 0; i < (int)(currentBlock)->GetEntities().size(); i++)
@@ -220,6 +214,29 @@ void Tetris::CheckWallCollide()
 		}
 	}
 }
+void Tetris::CheckBlockCollide()
+{
+	if ((int)(tBlocks).size() == 0)
+	{
+	}
+	else {
+		for (int i = 0; i < (int)(currentBlock)->GetEntities().size(); i++)
+		{
+			for (int j = 0; j < (int)(tBlocks).size(); j++)
+			{
+				if ((currentBlock)->GetEntities()[i].GetPosition().x == (tBlocks)[j].GetPosition().x && (currentBlock)->GetEntities()[i].GetPosition().y == (tBlocks)[j].GetPosition().y)
+				{
+					(currentBlock)->TransTetrisBlock(0.0, 1.0, 0.0);
+					PlaceBlock();
+					//(currentBlock)->LoadTetrisBlock();
+					//CheckWallCollide();
+					//break;
+				}
+			}
+
+		}
+	}
+}
 void Tetris::CheckFloorCollide()
 {
 	for (int i = 0; i < (int)(currentBlock)->GetEntities().size(); i++)
@@ -227,10 +244,22 @@ void Tetris::CheckFloorCollide()
 		if ((currentBlock)->GetEntities()[i].GetPosition().y <= board[1].GetPosition().y - 1)
 		{
 			(currentBlock)->TransTetrisBlock(0.0, 1.0, 0.0);
-			tBlocks.push_back(currentBlock);
-			currentBlock = futureBlock;
-			futureBlock = GenerateBlock();
-			SetCurrentBlock(currentBlock);
+			PlaceBlock();
 		}
 	}
+}
+void Tetris::PlaceBlock()
+{
+	for (int i = 0; i < (int)(currentBlock)->GetEntities().size(); i++)
+	{
+		tBlocks.push_back(currentBlock->GetEntities()[i]);
+	}
+	if (currentBlock != nullptr) { delete currentBlock; currentBlock = nullptr; }
+	currentBlock = futureBlock;
+	futureBlock = GenerateBlock();
+	SetCurrentBlock(currentBlock);
+}
+void Tetris::CheckForLine()
+{
+
 }
