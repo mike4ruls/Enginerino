@@ -2,12 +2,12 @@
 
 
 using namespace DirectX;
-Renderer::Renderer(std::vector<GameEntity> &en, Tetris &tG, SimpleVertexShader &vShader, SimplePixelShader &pShader)
+Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader)
 {
 	entities = &en;
-	tetrisG = &tG;
 	vertexShader = &vShader;
 	pixelShader = &pShader;
+	gotBoard = false;
 }
 
 
@@ -17,10 +17,6 @@ Renderer::~Renderer()
 }
 void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, DirectionalLight light, DirectionalLight light2)
 {
-	if(tetrisG->gameStart == true)
-	{
-		board = (tetrisG)->GetBoard();
-		tBlocks = (tetrisG)->GetBlocks();
 
 		for (int i = 0; i < (int)board.size(); i++)
 		{
@@ -100,6 +96,45 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 
 			tBlocks[i].Draw(context);
 		}
+		for (int i = 0; i < (int)pBlocks.size(); i++)
+		{
+
+			// Send data to shader variables
+			//  - Do this ONCE PER OBJECT you're drawing
+			//  - This is actually a complex process of copying data to a local buffer
+			//    and then copying that entire buffer to the GPU.  
+			//  - The "SimpleShader" class handles all of that for you.
+			vertexShader->SetMatrix4x4("world", pBlocks[i].GetWorldMatrix());
+			vertexShader->SetMatrix4x4("view", cam.viewMatrix);
+			vertexShader->SetMatrix4x4("projection", cam.projectionMatrix);
+			vertexShader->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
+
+			pixelShader->SetData("light", &light, sizeof(DirectionalLight));
+			pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
+			pixelShader->SetData("surfaceColor", &pBlocks[i].mat->surfaceColor, sizeof(XMFLOAT4));
+
+			// Once you've set all of the data you care to change for
+			// the next draw call, you need to actually send it to the GPU
+			//  - If you skip this, the "SetMatrix" calls above won't make it to the GPU!
+			vertexShader->CopyAllBufferData();
+			pixelShader->CopyAllBufferData();
+
+			// Set the vertex and pixel shaders to use for the next Draw() command
+			//  - These don't technically need to be set every frame...YET
+			//  - Once you start applying different shaders to different objects,
+			//    you'll need to swap the current shaders before each draw
+
+
+			vertexShader->SetShader();
+			pixelShader->SetShader();
+
+			// Set buffers in the input assembler
+			//  - Do this ONCE PER OBJECT you're drawing, since each object might
+			//    have different geometry.
+			//(entities + i)->PrepareMaterial(viewMatrix, projectionMatrix);
+
+			pBlocks[i].Draw(context);
+		}
 	}
 	
 	/*
@@ -144,4 +179,4 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 	}*/
 	
 
-}
+

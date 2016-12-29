@@ -112,7 +112,7 @@ void Game::Init()
 	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
 	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
 
-	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat);
+	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat, *render);
 
 	block = new TetrisBlock(*cube,*blueMat,2,2);
 
@@ -135,8 +135,11 @@ void Game::Init()
 	(entities)[2].LoadMaterial(*blueMat);
 	(entities)[3].LoadMaterial(*greenMat);*/
 
-	render = new Renderer(entities,*tetrisGame, *vertexShader, *pixelShader);
+	render = new Renderer(entities, *vertexShader, *pixelShader);
 	(tetrisGame)->StartGame(30, 10);
+	render->board = (tetrisGame)->GetBoard();
+	//render->tBlocks = (tetrisGame)->GetTBlocks();
+	//render->pBlocks = (tetrisGame)->GetPBlocks();
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
@@ -356,6 +359,16 @@ void Game::Update(float deltaTime, float totalTime)
 	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);*/
 
 	(tetrisGame)->UpdateGame();
+	if (tetrisGame->tChange)
+	{
+		render->tBlocks = (tetrisGame)->GetTBlocks();
+		tetrisGame->tChange = false;
+	}
+	if(tetrisGame->pChange)
+	{
+		render->pBlocks = (tetrisGame)->GetPBlocks();
+		tetrisGame->pChange = false;
+	}
 	
 	previousState = currentState;
 	entities.clear();
