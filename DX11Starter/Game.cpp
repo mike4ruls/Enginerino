@@ -100,28 +100,39 @@ void Game::Init()
 
 
 	//Texture time boisssss
-	//DirectX::CreateWICTextureFromFile(device,context,"",0,);
-	//SVR = new SimpleSRV();
+	SVR = 0;
+	DirectX::CreateWICTextureFromFile(device, context, L"Textures/brick.jpg", 0, &SVR);
+	//DirectX::CreateWICTextureFromFile(device,context,L"Textures/harambe.jpg",0,&SVR);
+
+	D3D11_SAMPLER_DESC sDes;
+	sDes.AddressU = D3D11_TEXTURE_ADDRESS_WRAP; 
+	sDes.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDes.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sDes.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sDes.MaxLOD = D3D11_FLOAT32_MAX;
+
+	device->CreateSamplerState(&sDes, &sample);
+	
 	//CreateWICTextureFromFile(*device, *context, L"Tetures/brick.jpg",0,);
 
 	//Wondering if i can make pointers to materials and switch the material whenever
 	//I deed it :D
-	defaultMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.5f , 0.5f, 0.5f, 1.0f));
-	redMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, .0f, 1.0f));
-	greenMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
-	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
-	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
+	defaultMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.5f , 0.5f, 0.5f, 1.0f), *SVR, *sample);
+	redMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, .0f, 1.0f), *SVR, *sample);
+	greenMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), *SVR, *sample);
+	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), *SVR, *sample);
+	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), *SVR, *sample);
 
 	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat);
 
-	block = new TetrisBlock(*cube,*blueMat,2,2);
+	//block = new TetrisBlock(*cube,*blueMat,2,2);
 
-	entities = block->GetEntities();
+	//entities = block->GetEntities();
 
 	currentState = false;
 	previousState = false;
 
-	/*
+	
 	entities.push_back(GameEntity(*helix, "Square", *defaultMat));
 	entities.push_back(GameEntity(*torus, "Square", *defaultMat));
 	entities.push_back(GameEntity(*cylinder, "Pentagon", *defaultMat));
@@ -133,7 +144,7 @@ void Game::Init()
 	//(entities)[0].LoadMaterial(*purpleMat);
 	(entities)[1].LoadMaterial(*redMat);
 	(entities)[2].LoadMaterial(*blueMat);
-	(entities)[3].LoadMaterial(*greenMat);*/
+	(entities)[3].LoadMaterial(*greenMat);
 
 	render = new Renderer(entities, *vertexShader, *pixelShader, *tetrisGame);
 	//render->tBlocks = (tetrisGame)->GetTBlocks();
@@ -318,6 +329,7 @@ void Game::Update(float deltaTime, float totalTime)
 {
 	mainCam->Update(deltaTime);
 	
+	/*
 	if (GetAsyncKeyState(VK_UP))
 	{
 		currentState = true;
@@ -333,8 +345,8 @@ void Game::Update(float deltaTime, float totalTime)
 			block->type += 1;
 			block->LoadTetrisBlock();
 		}
-	}
-	/*
+	}*/
+	
 	if (GetAsyncKeyState(VK_UP))
 	{
 		(entities)[3].Translate(+0.0f, +2.0f * deltaTime, +0.0f);
@@ -354,7 +366,7 @@ void Game::Update(float deltaTime, float totalTime)
 
 	(entities)[0].Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
 	(entities)[1].Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
-	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);*/
+	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);
 	if (tetrisGame->gameStart) {
 		(tetrisGame)->UpdateGame();
 		if (tetrisGame->tChange)

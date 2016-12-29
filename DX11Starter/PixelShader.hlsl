@@ -4,14 +4,8 @@
 // - The name of the struct itself is unimportant
 // - The variable names don't have to match other shaders (just the semantics)
 // - Each variable must have a semantic, which defines its usage
-SamplerState Trilinear : register(s0)
-{
-
-};
-Texture2D DiffuseTexture : register(t0)
-{
-
-};
+Texture2D diffuseTexture : register(t0);
+SamplerState basicSampler : register(s0);
 struct VertexToPixel
 {
 	// Data type
@@ -22,7 +16,7 @@ struct VertexToPixel
 	float4 position		: SV_POSITION;
 	//float4 color		: COLOR;
 	float3 normal       : NORMAL;
-	float2 uv			: UV;
+	float2 uv			: TEXTCORD;
 	float3 viewDir		: DIR;
 	
 };
@@ -84,6 +78,8 @@ float4 main(VertexToPixel input) : SV_TARGET
 
 	float4 finalColor1 = LightOnColor(light, nor) * specular;
 	float4 finalColor2 = LightOnColor(light2, nor) * 0.3;
+
+	float4 textureColor = diffuseTexture.Sample(basicSampler, input.uv);
 	// Just return the input color
 	// - This color (like most values passing through the rasterizer) is 
 	//   interpolated for each pixel between the corresponding vertices 
@@ -108,7 +104,8 @@ float4 main(VertexToPixel input) : SV_TARGET
 	//return (float4(1, 1, 1, 1)*lightAmount) + float4(1, 1, 1, 1);
 	//return float4(nor, 1);
 	//return (lightAmount * light.DiffuseColor) + (light.AmbientColor * 0.8);
-	return ((finalColor1 + finalColor2) * surfaceColor);
+	return textureColor * ((finalColor1 + finalColor2) * surfaceColor);
+	//return ((finalColor1 + finalColor2) * surfaceColor);
 	//return light.DiffuseColor;
 	//return float4(1,1,1,1);
 }

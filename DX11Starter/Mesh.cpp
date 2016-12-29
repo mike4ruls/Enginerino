@@ -4,7 +4,9 @@ using namespace DirectX;
 
 Mesh::Mesh(const char* objFile, ID3D11Device &dev)
 {
-	
+	vertBuffer = 0;
+	indBuffer = 0;
+
 	// File input object
 	std::ifstream obj(objFile);
 
@@ -150,6 +152,9 @@ Mesh::Mesh(const char* objFile, ID3D11Device &dev)
 
 Mesh::Mesh(Vertex v[], int numOfV, int i[], int numOfI, ID3D11Device &dev)
 {
+	vertBuffer = 0;
+	indBuffer = 0;
+
 	CreateBuffer(v,numOfV,i,numOfI, dev);
 	/*
 	numOfIndex = numOfI;
@@ -198,8 +203,8 @@ Mesh::Mesh(Vertex v[], int numOfV, int i[], int numOfI, ID3D11Device &dev)
 Mesh::~Mesh()
 {
 
-	if (vertBuffer != nullptr) { vertBuffer->Release(); }
-	if (indBuffer != nullptr) { indBuffer->Release(); }
+	if (vertBuffer != nullptr) { vertBuffer->Release(); vertBuffer = nullptr; }
+	if (indBuffer != nullptr) { indBuffer->Release(); indBuffer = nullptr; }
 }
 
 ID3D11Buffer* Mesh::GetVertexBuffer()

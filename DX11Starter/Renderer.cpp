@@ -137,7 +137,7 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 			pBlocks[i].Draw(context);
 		}
 	}
-	/*
+	
 	for(int i= 0; i < (int)(*entities).size(); i++)
 	{
 
@@ -154,6 +154,8 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 		pixelShader->SetData("light", &light, sizeof(DirectionalLight));
 		pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
 		pixelShader->SetData("surfaceColor", &(*entities)[i].mat->surfaceColor, sizeof(XMFLOAT4));
+		pixelShader->SetSamplerState("basicSampler", (*entities)[i].mat->GetSampler());
+		pixelShader->SetShaderResourceView("diffuseTexture", (*entities)[i].mat->GetSVR());
 
 		// Once you've set all of the data you care to change for
 		// the next draw call, you need to actually send it to the GPU
@@ -176,7 +178,7 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 		//(entities + i)->PrepareMaterial(viewMatrix, projectionMatrix);
 
 		(*entities)[i].Draw(context);
-	}*/
+	}
 }
 	
 

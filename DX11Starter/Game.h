@@ -85,7 +85,8 @@ private:
 	SimpleVertexShader* vertexShader = nullptr;
 	SimplePixelShader* pixelShader = nullptr;
 
-	SimpleSRV* SVR = nullptr;
+	ID3D11ShaderResourceView* SVR = nullptr;
+	ID3D11SamplerState* sample = nullptr;
 
 	// The matrices to go from model space to screen space
 	DirectX::XMFLOAT4X4 worldMatrix;

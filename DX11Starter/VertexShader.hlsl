@@ -29,7 +29,7 @@ struct VertexShaderInput
 	float3 position		: POSITION;     // XYZ position
 	//float4 color		: COLOR;        // RGBA color
 	float3 normal		: NORMAL;
-	float2 uv			: UV;
+	float2 uv			: TEXTCORD;
 };
 
 // Struct representing the data we're sending down the pipeline
@@ -85,6 +85,7 @@ VertexToPixel main( VertexShaderInput input )
 	worldPos = mul(input.position, world);
 	output.viewDir = camPos.xyz - worldPos.xyz;
 	output.viewDir = normalize(output.viewDir);
+	output.uv = input.uv;
 
 	// Pass the color through 
 	// - The values will be interpolated per-pixel by the rasterizer

@@ -4,7 +4,8 @@ using namespace DirectX;
 
 Camera::Camera(int width, int height)
 {
-	camPos = XMFLOAT4(6.5f, 16.0f, -40.0f, 0.0f);
+	//camPos = XMFLOAT4(6.5f, 16.0f, -40.0f, 0.0f);
+	camPos = XMFLOAT4(0.0f, 0.0f, -8.0f, 0.0f);
 	camDir = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
 	up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
 
@@ -92,7 +93,8 @@ void Camera::SetRotation()
 
 void Camera::ResetCamera()
 {
-	camPos = XMFLOAT4(6.5f, 16.0f, -40.0f, 0.0f);
+	//camPos = XMFLOAT4(6.5f, 16.0f, -40.0f, 0.0f);
+	camPos = XMFLOAT4(0.0f, 0.0f, -8.0f, 0.0f);
 	camDir = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
 	up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
 
