@@ -24,6 +24,7 @@ public:
 	void MoveBlock();
 	void CheckWallCollide();
 	void CheckBlockCollide();
+	bool CheckWallBlockCollide();
 	void CheckFloorCollide();
 	void CheckGameOver();
 	void PlaceBlock();

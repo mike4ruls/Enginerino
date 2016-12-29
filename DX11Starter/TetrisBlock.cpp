@@ -62,11 +62,11 @@ void TetrisBlock::LoadTetrisBlock()
 	{
 		if(rot == 1)
 		{
-			(tetrisBlocks)[0].Translate(-2.0, 0.0, 0.0);
-			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(2.0, 0.0, 0.0);
+			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(2.0, 0.0, 0.0);
+			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(-2.0, 0.0, 0.0);
 		}
 		if (rot == 2)
 		{
@@ -78,11 +78,11 @@ void TetrisBlock::LoadTetrisBlock()
 		}
 		if (rot == 3)
 		{
-			(tetrisBlocks)[0].Translate(2.0, 0.0, 0.0);
-			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(-2.0, 0.0, 0.0);
+			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(-2.0, 0.0, 0.0);
+			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(2.0, 0.0, 0.0);
 		}
 		if (rot == 4)
 		{
@@ -99,11 +99,11 @@ void TetrisBlock::LoadTetrisBlock()
 	{
 		if (rot == 1)
 		{
-			(tetrisBlocks)[0].Translate(-1.0, -1.0, 0.0);
-			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(1.0, 1.0, 0.0);
+			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(1.0, 1.0, 0.0);
+			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(-1.0, -1.0, 0.0);
 		}
 		if (rot == 2)
 		{
@@ -115,11 +115,11 @@ void TetrisBlock::LoadTetrisBlock()
 		}
 		if (rot == 3)
 		{
-			(tetrisBlocks)[0].Translate(1.0, 1.0, 0.0);
-			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(-1.0, -1.0, 0.0);
+			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(-1.0, -1.0, 0.0);
+			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(1.0, 1.0, 0.0);
 		}
 		if (rot == 4)
 		{
@@ -136,11 +136,11 @@ void TetrisBlock::LoadTetrisBlock()
 	{
 		if (rot == 1)
 		{
-			(tetrisBlocks)[0].Translate(-1.0, 1.0, 0.0);
-			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(1.0, -1.0, 0.0);
+			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(1.0, -1.0, 0.0);
+			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(-1.0, 1.0, 0.0);
 		}
 		if (rot == 2)
 		{
@@ -152,11 +152,11 @@ void TetrisBlock::LoadTetrisBlock()
 		}
 		if (rot == 3)
 		{
-			(tetrisBlocks)[0].Translate(1.0, -1.0, 0.0);
-			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(-1.0, 1.0, 0.0);
+			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(-1.0, 1.0, 0.0);
+			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(1.0, -1.0, 0.0);
 		}
 		if (rot == 4)
 		{
@@ -174,11 +174,11 @@ void TetrisBlock::LoadTetrisBlock()
 	{
 		if (rot == 1)
 		{
-			(tetrisBlocks)[0].Translate(-1.0, -1.0, 0.0);
-			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(1.0, 1.0, 0.0);
+			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(2.0, 0.0, 0.0);
+			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(-2.0, 0.0, 0.0);
 		}
 		if (rot == 2)
 		{
@@ -190,11 +190,11 @@ void TetrisBlock::LoadTetrisBlock()
 		}
 		if (rot == 3)
 		{
-			(tetrisBlocks)[0].Translate(1.0, 1.0, 0.0);
-			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(-1.0, -1.0, 0.0);
+			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(-2.0, 0.0, 0.0);
+			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(2.0, 0.0, 0.0);
 		}
 		if (rot == 4)
 		{
@@ -211,11 +211,11 @@ void TetrisBlock::LoadTetrisBlock()
 	{
 		if (rot == 1)
 		{
-			(tetrisBlocks)[0].Translate(-2.0, 0.0, 0.0);
-			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(2.0, 0.0, 0.0);
+			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(1.0, -1.0, 0.0);
+			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(-1.0, 1.0, 0.0);
 		}
 		if (rot == 2)
 		{
@@ -227,11 +227,11 @@ void TetrisBlock::LoadTetrisBlock()
 		}
 		if (rot == 3)
 		{
-			(tetrisBlocks)[0].Translate(2.0, 0.0, 0.0);
-			(tetrisBlocks)[1].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[0].Translate(-2.0, 0.0, 0.0);
+			(tetrisBlocks)[1].Translate(-1.0, 0.0, 0.0);
 			(tetrisBlocks)[2].Translate(0.0, 0.0, 0.0);
-			(tetrisBlocks)[3].Translate(-1.0, 0.0, 0.0);
-			(tetrisBlocks)[4].Translate(-1.0, 1.0, 0.0);
+			(tetrisBlocks)[3].Translate(1.0, 0.0, 0.0);
+			(tetrisBlocks)[4].Translate(1.0, -1.0, 0.0);
 		}
 		if (rot == 4)
 		{

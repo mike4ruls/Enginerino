@@ -1,4 +1,6 @@
 ﻿  Tetris.cpp
+  Renderer.cpp
+  Main.cpp
   Game.cpp
   Generating Code...
   DX11Starter.vcxproj -> G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\Debug\DX11Starter.exe

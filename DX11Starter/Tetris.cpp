@@ -199,6 +199,10 @@ void Tetris::MoveBlock()
 		currentState = true;
 		if (currentState != previousState) {
 			currentBlock->TransTetrisBlock(-1.0, 0.0, 0.0);
+			if(CheckWallBlockCollide())
+			{
+				currentBlock->TransTetrisBlock(1.0, 0.0, 0.0);
+			}
 			tChange = true;
 		}
 	}
@@ -207,6 +211,10 @@ void Tetris::MoveBlock()
 		currentState = true;
 		if (currentState != previousState) {
 			currentBlock->TransTetrisBlock(1.0, 0.0, 0.0);
+			if (CheckWallBlockCollide())
+			{
+				currentBlock->TransTetrisBlock(-1.0, 0.0, 0.0);
+			}
 			tChange = true;
 		}
 	}
@@ -263,12 +271,35 @@ void Tetris::CheckBlockCollide()
 					PlaceBlock();
 					//(currentBlock)->LoadTetrisBlock();
 					//CheckWallCollide();
-					//break;
+					break;
 				}
 			}
 
 		}
 	}
+}
+bool Tetris::CheckWallBlockCollide()
+{
+	if ((int)(tBlocks).size() == 0)
+	{
+	}
+	else {
+		for (int i = 0; i < (int)(currentBlock)->GetEntities().size(); i++)
+		{
+			for (int j = 0; j < (int)(tBlocks).size(); j++)
+			{
+				if ((currentBlock)->GetEntities()[i].GetPosition().x == (tBlocks)[j].GetPosition().x && (currentBlock)->GetEntities()[i].GetPosition().y == (tBlocks)[j].GetPosition().y)
+				{
+					return true;
+					//(currentBlock)->LoadTetrisBlock();
+					//CheckWallCollide();
+					break;
+				}
+			}
+
+		}
+	}
+	return false;
 }
 void Tetris::CheckFloorCollide()
 {
