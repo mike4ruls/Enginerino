@@ -60,6 +60,9 @@ private:
 	Material *greenMat = nullptr;
 	Material *blueMat = nullptr;
 	Material *purpleMat = nullptr;
+	Material *lightBlueMat = nullptr;
+	Material *yellowMat = nullptr;
+	Material *greyMat = nullptr;
 
 	TetrisBlock* block = nullptr;
 	Tetris* tetrisGame = nullptr;
@@ -86,7 +89,11 @@ private:
 	SimplePixelShader* pixelShader = nullptr;
 
 	ID3D11ShaderResourceView* SVR = nullptr;
+	ID3D11ShaderResourceView* skyBoxSVR = nullptr;
 	ID3D11SamplerState* sample = nullptr;
+
+	ID3D11RasterizerState* skyRast;
+	ID3D11DepthStencilState* skyDepth;
 
 	// The matrices to go from model space to screen space
 	DirectX::XMFLOAT4X4 worldMatrix;

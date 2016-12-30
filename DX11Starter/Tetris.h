@@ -7,7 +7,7 @@
 class Tetris
 {
 public:
-	Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p);
+	Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr);
 	~Tetris();
 
 	void StartGame(int h, int w);
@@ -35,6 +35,9 @@ public:
 	Material* blue;
 	Material* green;
 	Material* purple;
+	Material* lightBlue;
+	Material* yellow;
+	Material* grey;
 
 	TetrisBlock* futureBlock = nullptr;
 	TetrisBlock* currentBlock = nullptr;

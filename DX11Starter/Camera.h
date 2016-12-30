@@ -15,6 +15,7 @@ public:
 	DirectX::XMFLOAT4 camPos;
 	DirectX::XMFLOAT4 camDir;
 	DirectX::XMFLOAT4 up;
+	DirectX::XMFLOAT4 rotation;
 	float xRot;
 	float yRot;
 
@@ -24,6 +25,7 @@ public:
 	void SetProject(int width, int height);
 	void SetRotation();
 	void ResetCamera();
+	void SetTetrisCamera();
 
 	void Update(float deltaTime);
 	void Switch();

@@ -22,8 +22,6 @@ Game::Game(HINSTANCE hInstance)
 		true)			   // Show extra stats (fps) in title bar?
 {
 	// Initialize fields
-	//vertexBuffer = 0;
-	//indexBuffer = 0;
 	vertexShader = 0;
 	pixelShader = 0;
 
@@ -67,6 +65,10 @@ Game::~Game()
 	if (greenMat != nullptr) { delete greenMat; greenMat = nullptr; }
 	if (blueMat != nullptr) { delete blueMat; blueMat = nullptr; }
 	if (purpleMat != nullptr) { delete purpleMat; purpleMat = nullptr; }
+	if (lightBlueMat != nullptr) { delete lightBlueMat; lightBlueMat = nullptr; }
+	if (yellowMat != nullptr) { delete yellowMat; yellowMat = nullptr; }
+	if (greyMat != nullptr) { delete greyMat; greyMat = nullptr; }
+
 	if (block != nullptr) { delete block; block = nullptr; }
 	if (tetrisGame != nullptr) { delete tetrisGame; tetrisGame = nullptr; }
 }
@@ -81,18 +83,17 @@ void Game::Init()
 	// geometry to draw and some simple camera matrices.
 	//  - You'll be expanding and/or replacing these later
 	LoadShaders();
-	//CreateMatrices();
 	CreateBasicGeometry();
 
 	noClick = true;
 	newPosX = 0.0;
 	newPosY = 0.0;
 
-	light1.AmbientColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);//{ (0.1 , 0.1, 0.1,1.0),(0,0,1,1),(1,-1,0) };
+	light1.AmbientColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	light1.DiffuseColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	light1.Direction = XMFLOAT3(1.0f, -1.0f, 1.0f);
 
-	light2.AmbientColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);//{ (0.1 , 0.1, 0.1,1.0),(0,0,1,1),(1,-1,0) };
+	light2.AmbientColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 	light2.DiffuseColor = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	light2.Direction = XMFLOAT3(-1.0f, 0.3f, 1.0f);
 
@@ -101,8 +102,11 @@ void Game::Init()
 
 	//Texture time boisssss
 	SVR = 0;
+	skyBoxSVR = 0;
 	DirectX::CreateWICTextureFromFile(device, context, L"Textures/brick.jpg", 0, &SVR);
 	//DirectX::CreateWICTextureFromFile(device,context,L"Textures/harambe.jpg",0,&SVR);
+
+	//DirectX::CreateDDSTextureFromFile(device, L"Textures/SunnyCubeMap.dds", 0, &skyBoxSRV);
 
 	D3D11_SAMPLER_DESC sDes;
 	sDes.AddressU = D3D11_TEXTURE_ADDRESS_WRAP; 
@@ -112,21 +116,36 @@ void Game::Init()
 	sDes.MaxLOD = D3D11_FLOAT32_MAX;
 
 	device->CreateSamplerState(&sDes, &sample);
-	
-	//CreateWICTextureFromFile(*device, *context, L"Tetures/brick.jpg",0,);
+
+	// Create a rasterizer state so we can render backfaces
+	D3D11_RASTERIZER_DESC rsDesc = {};
+	rsDesc.FillMode = D3D11_FILL_SOLID;
+	rsDesc.CullMode = D3D11_CULL_FRONT;
+	rsDesc.DepthClipEnable = true;
+	device->CreateRasterizerState(&rsDesc, &skyRast);
+
+	// Create a depth state so that we can accept pixels
+	// at a depth less than or EQUAL TO an existing depth
+	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL; // Make sure we can see the sky (at max depth)
+	device->CreateDepthStencilState(&dsDesc, &skyDepth);
 
 	//Wondering if i can make pointers to materials and switch the material whenever
 	//I deed it :D
 	defaultMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.5f , 0.5f, 0.5f, 1.0f), *SVR, *sample);
-	redMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, .0f, 1.0f), *SVR, *sample);
-	greenMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), *SVR, *sample);
-	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), *SVR, *sample);
-	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), *SVR, *sample);
+	redMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(8.0f, 0.0f, .0f, 1.0f), *SVR, *sample);
+	greenMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 8.0f, 0.0f, 1.0f), *SVR, *sample);
+	blueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 8.0f, 1.0f), *SVR, *sample);
+	purpleMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(8.0f, 0.0f, 8.0f, 1.0f), *SVR, *sample);
+	lightBlueMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(0.0f, 0.0f, 6.0f, 1.0f), *SVR, *sample);
+	yellowMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(8.0f, 8.0f, 0.0f, 1.0f), *SVR, *sample);
+	greyMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(5.0f, 5.0f, 5.0f, 1.0f), *SVR, *sample);
 
-	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat);
+	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat, *lightBlueMat, *yellowMat, *greyMat);
 
 	//block = new TetrisBlock(*cube,*blueMat,2,2);
-
 	//entities = block->GetEntities();
 
 	currentState = false;
@@ -146,9 +165,8 @@ void Game::Init()
 	(entities)[2].LoadMaterial(*blueMat);
 	(entities)[3].LoadMaterial(*greenMat);
 
-	render = new Renderer(entities, *vertexShader, *pixelShader, *tetrisGame);
-	//render->tBlocks = (tetrisGame)->GetTBlocks();
-	//render->pBlocks = (tetrisGame)->GetPBlocks();
+	render = new Renderer(entities, *vertexShader, *pixelShader, *tetrisGame, *device);
+
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
 	// Essentially: "What kind of shape should the GPU draw with our data?"
@@ -243,6 +261,8 @@ void Game::CreateBasicGeometry()
 	// - We're going to copy this array, exactly as it exists in memory
 	//    over to a DirectX-controlled data structure (the vertex buffer)
 
+	//Old Meshes
+	/*
 	//Square
 	Vertex vertices1[] = 
 	{
@@ -289,7 +309,7 @@ void Game::CreateBasicGeometry()
 
 	obj1 = new Mesh(vertices1, sizeof(vertices1), indices1, sizeof(indices1), *device);
 	obj2 = new Mesh(vertices2, sizeof(vertices2), indices2, sizeof(indices2), *device);
-	obj3 = new Mesh(vertices3, sizeof(vertices3), indices3, sizeof(indices3), *device);
+	obj3 = new Mesh(vertices3, sizeof(vertices3), indices3, sizeof(indices3), *device);*/
 	
 	cone = new Mesh("Assets/Models/cone.obj", *device);
 	cube = new Mesh("Assets/Models/cube.obj", *device);
@@ -309,17 +329,7 @@ void Game::OnResize()
 {
 	// Handle base-level DX resize stuff
 	DXCore::OnResize();
-
 	mainCam->SetProject(width, height);
-
-	/*
-	// Update our projection matrix since the window size changed
-	XMMATRIX P = XMMatrixPerspectiveFovLH(
-		0.25f * 3.1415926535f,	// Field of View Angle
-		(float)width / height,	// Aspect ratio
-		0.1f,				  	//  Near clip plane distance
-		100.0f);			  	// Far clip plane distance
-	XMStoreFloat4x4(&projectionMatrix, XMMatrixTranspose(P)); // Transpose for HLSL!*/
 }
 
 // --------------------------------------------------------
@@ -329,6 +339,7 @@ void Game::Update(float deltaTime, float totalTime)
 {
 	mainCam->Update(deltaTime);
 	
+	//For Testing purposes
 	/*
 	if (GetAsyncKeyState(VK_UP))
 	{
@@ -398,6 +409,8 @@ void Game::Update(float deltaTime, float totalTime)
 		{
 			(tetrisGame)->StartGame(30, 10);
 			render->board = (tetrisGame)->GetBoard();
+
+			mainCam->SetTetrisCamera();
 		}
 	}
 	
@@ -447,20 +460,8 @@ void Game::Draw(float deltaTime, float totalTime)
 // --------------------------------------------------------
 void Game::OnMouseDown(WPARAM buttonState, int x, int y)
 {
-
-	
-	// Add any custom code here...
-
 	// Save the previous mouse position, so we have it for the future
-
 	mainCam->IsClicking(buttonState, x, y);
-
-	/*
-		if (noClick) {
-			prevMousePos.x = x;
-			prevMousePos.y = y;
-			noClick = false;
-		}*/
 
 	// Caputure the mouse so we keep getting mouse move
 	// events even if the mouse leaves the window.  we'll be
@@ -473,12 +474,7 @@ void Game::OnMouseDown(WPARAM buttonState, int x, int y)
 // --------------------------------------------------------
 void Game::OnMouseUp(WPARAM buttonState, int x, int y)
 {
-	// Add any custom code here...
 	mainCam->UpdateNewPos(buttonState, x, y);
-	/*
-	noClick = true;
-	newPosX += distX;
-	newPosY += distY;*/
 
 	// We don't care about the tracking the cursor outside
 	// the window anymore (we're not dragging if the mouse is up)
@@ -492,33 +488,9 @@ void Game::OnMouseUp(WPARAM buttonState, int x, int y)
 // --------------------------------------------------------
 void Game::OnMouseMove(WPARAM buttonState, int x, int y, float deltaTime)
 {
-	// Add any custom code here...
-
 	// Save the previous mouse position, so we have it for the future
-
 	mainCam->OnMouseMove(buttonState, x, y, deltaTime);
-	
-	/*
-	if (noClick) {
-		prevMousePos.x = x;
-		prevMousePos.y = y;
-	}
-	else
-	{
-		distX = (x - prevMousePos.x)*-0.01f;
-		distY = (y - prevMousePos.y)*0.01f;
 
-		printf("X dist:%f, Y dist:%f\n", distX,distY);
-		
-		XMVECTOR pos = XMVectorSet((newPosX + distX), (newPosY + distY), viewMatrix._34 * -1, 0);
-		XMVECTOR dir = XMVectorSet(0, 0, 1, 0);
-		XMVECTOR up = XMVectorSet(0, 1, 0, 0);
-		XMMATRIX V = XMMatrixLookToLH(
-			pos,     // The position of the "camera"
-			dir,     // Direction the camera is looking
-			up);     // "Up" direction in 3D space (prevents roll)
-		XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(V));
-	}*/
 }
 
 // --------------------------------------------------------
@@ -529,31 +501,6 @@ void Game::OnMouseMove(WPARAM buttonState, int x, int y, float deltaTime)
 void Game::OnMouseWheel(float wheelDelta, int x, int y, float deltaTime)
 {
 	mainCam->CheckScrolling(wheelDelta, x, y, deltaTime);
-
-	/*
-	if(wheelDelta <0 )
-	{
-		XMVECTOR pos = XMVectorSet(viewMatrix._14 * -1.0f, viewMatrix._24 * -1.0f, (viewMatrix._34 + 0.1f) * -1.0f, 0.0f);
-		XMVECTOR dir = XMVectorSet(0, 0, 1, 0);
-		XMVECTOR up = XMVectorSet(0, 1, 0, 0);
-		XMMATRIX V = XMMatrixLookToLH(
-			pos,     // The position of the "camera"
-			dir,     // Direction the camera is looking
-			up);     // "Up" direction in 3D space (prevents roll)
-		XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(V));
-	}
-	else if(wheelDelta >0)
-	{
-		XMVECTOR pos = XMVectorSet(viewMatrix._14 * -1.0f, viewMatrix._24 * -1.0f, (viewMatrix._34 - 0.1f) * -1.0f, 0.0f);
-		XMVECTOR dir = XMVectorSet(0, 0, 1, 0);
-		XMVECTOR up = XMVectorSet(0, 1, 0, 0);
-		XMMATRIX V = XMMatrixLookToLH(
-			pos,     // The position of the "camera"
-			dir,     // Direction the camera is looking
-			up);     // "Up" direction in 3D space (prevents roll)
-		XMStoreFloat4x4(&viewMatrix, XMMatrixTranspose(V));
-	}
-	else{}*/
 
 }
 #pragma endregion

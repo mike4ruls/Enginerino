@@ -4,7 +4,6 @@ using namespace DirectX;
 
 Camera::Camera(int width, int height)
 {
-	//camPos = XMFLOAT4(6.5f, 16.0f, -40.0f, 0.0f);
 	camPos = XMFLOAT4(0.0f, 0.0f, -8.0f, 0.0f);
 	camDir = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
 	up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
@@ -13,8 +12,8 @@ Camera::Camera(int width, int height)
 	newPosX = 0.0f;
 	newPosY = 0.0f;
 
-	newRotX = 3.14f;
-	newRotY = 9.50f;
+	newRotX = 0.0;
+	newRotY = 0.0;
 	
 	xRot = 0.0f;
 	yRot = 0.0f;
@@ -70,21 +69,18 @@ void Camera::SetProject(int width, int height)
 }
 void Camera::SetRotation()
 {
-	XMVECTOR camD;
-	if (camPos.z > 0) {
-		camD = XMQuaternionRotationRollPitchYaw(-(yRot + (newRotY)), -(xRot + (newRotX)), 1);
-	}
-	else {
-		camD = XMQuaternionRotationRollPitchYaw(-(yRot + (newRotY)), -(xRot + (newRotX)), 1);
-	}
+	float y = yRot + newRotY;
+	float x = xRot + newRotX;
 
-	XMStoreFloat4(&camDir, camD);
+	y= max(min(y, XM_PIDIV2), -XM_PIDIV2);
 
 	//Roll = z axis i think
 	//Picth = x axis i think
 	//Yaw = y axis i think
-	//camDir = XMQuaternionRotationRollPitchYaw(,,);
-	
+	XMStoreFloat4(&rotation, XMQuaternionRotationRollPitchYaw(y, -x, 0));
+	XMVECTOR dir = XMVector3Rotate(XMVectorSet(0, 0, 1, 0), XMLoadFloat4(&rotation));
+	XMStoreFloat4(&camDir, dir);
+
 	SetView();
 }
 
@@ -93,7 +89,6 @@ void Camera::SetRotation()
 
 void Camera::ResetCamera()
 {
-	//camPos = XMFLOAT4(6.5f, 16.0f, -40.0f, 0.0f);
 	camPos = XMFLOAT4(0.0f, 0.0f, -8.0f, 0.0f);
 	camDir = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
 	up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
@@ -101,8 +96,29 @@ void Camera::ResetCamera()
 	newPosX = 0.0f;
 	newPosY = 0.0f;
 
-	newRotX = 3.14f;
-	newRotY = 9.50f;
+	newRotX = 0.0f;
+	newRotY = 0.0f;
+
+	xRot = 0.0f;
+	yRot = 0.0f;
+
+	distX = 0.0f;
+	distY = 0.0f;
+
+	SetView();
+	SetRotation();
+}
+void Camera::SetTetrisCamera()
+{
+	camPos = XMFLOAT4(6.5f, 16.0f, -40.0f, 0.0f);
+	camDir = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f);
+	up = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.0f);
+
+	newPosX = 0.0f;
+	newPosY = 0.0f;
+
+	newRotX = 0.0f;
+	newRotY = 0.0f;
 
 	xRot = 0.0f;
 	yRot = 0.0f;
@@ -187,20 +203,12 @@ void Camera::Update(float deltaTime)
 void Camera::IsClicking(WPARAM buttonState, int x, int y)
 {
 
-
-	// Add any custom code here...
-
 	// Save the previous mouse position, so we have it for the future
 	if (noClick) {
 		prevMousePos.x = x;
 		prevMousePos.y = y;
 		Switch();
 	}
-
-	// Caputure the mouse so we keep getting mouse move
-	// events even if the mouse leaves the window.  we'll be
-	// releasing the capture once a mouse button is released
-	////SetCapture(DXCore::);
 }
 
 // --------------------------------------------------------
@@ -234,7 +242,7 @@ void Camera::OnMouseMove(WPARAM buttonState, int x, int y, float deltaTime)
 	XMVECTOR camP = XMLoadFloat4(&camPos);
 	XMVECTOR camD = XMLoadFloat4(&camDir);
 	XMVECTOR upp = XMLoadFloat4(&up);
-	// Add any custom code here...
+
 	// Save the previous mouse position, so we have it for the future
 	if (noClick) {
 		prevMousePos.x = x;

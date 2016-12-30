@@ -16,6 +16,7 @@ public:
 	ID3D11Buffer* GetIndexBuffer();
 	void Draw(ID3D11DeviceContext* context);
 	int GetIndexCount();
+	int GetVertexCount();
 	void CreateBuffer(Vertex v[], int numOfV, int i[], int numOfI, ID3D11Device &dev);
 	
 private:
@@ -25,5 +26,6 @@ private:
 	ID3D11ShaderResourceView* SVR = nullptr;
 
 	int numOfIndex;
+	int numOfVertex;
 };
 

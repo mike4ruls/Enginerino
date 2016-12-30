@@ -14,8 +14,6 @@ Material::Material(SimplePixelShader &pxs, SimpleVertexShader &vxs, XMFLOAT4 sCo
 
 Material::~Material()
 {
-	//if (pixelShader) { delete pixelShader; }
-	//if (vertexShader) { delete vertexShader; }
 }
 SimplePixelShader Material::GetPixelShader()
 {

@@ -2,13 +2,16 @@
 
 
 
-Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p)
+Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr)
 {
 	shapeBlock = &shape;
 	red = &r;
 	blue = &b;
 	green = &g;
 	purple = &p;
+	lightBlue = &lB;
+	yellow = &y;
+	grey = &gr;
 	gameStart = false;
 	gameOver = false;
 	score = 0;
@@ -72,21 +75,21 @@ void Tetris::DrawBoard(int height, int width)
 {
 	for (int i = 0; i < height; i++)
 	{
-		GameEntity wall = GameEntity(*shapeBlock,"wall",*blue);
+		GameEntity wall = GameEntity(*shapeBlock,"wall",*lightBlue);
 		wall.Translate(0.0, (float)i, 0.0);
 
 		board.push_back(wall);
 	}
 	for (int i = 0; i < width; i++)
 	{
-		GameEntity wall = GameEntity(*shapeBlock, "wall", *blue);
+		GameEntity wall = GameEntity(*shapeBlock, "wall", *lightBlue);
 		wall.Translate((float)(i+1), 0, 0);
 
 		board.push_back(wall);
 	}
 	for (int i = 0; i < height; i++)
 	{
-		GameEntity wall = GameEntity(*shapeBlock, "wall", *blue);
+		GameEntity wall = GameEntity(*shapeBlock, "wall", *lightBlue);
 		wall.Translate((float)(width + 1), (float)i, 0.0);
 
 		board.push_back(wall);
@@ -118,12 +121,12 @@ TetrisBlock* Tetris::GenerateBlock()
 	}
 	case 4:
 	{
-		block = new TetrisBlock(*shapeBlock, *blue, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *yellow, ranBlock, 2);
 		break;
 	}
 	case 5:
 	{
-		block = new TetrisBlock(*shapeBlock, *green, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *grey, ranBlock, 2);
 		break;
 	}
 	case 6:
@@ -237,17 +240,13 @@ void Tetris::CheckWallCollide()
 		{
 			(currentBlock)->TransTetrisBlock(1.0, 0.0, 0.0);
 			tChange = true;
-			//(currentBlock)->LoadTetrisBlock();
-			//CheckWallCollide();
-			//break;
+
 		}
 		else if ((currentBlock)->GetEntities()[i].GetPosition().x >= board[1].GetPosition().x + (width + 1))
 		{
 			(currentBlock)->TransTetrisBlock(-1.0,0.0,0.0);
 			tChange = true;
-			//(currentBlock)->LoadTetrisBlock();
-			//CheckWallCollide();
-			//break;
+
 		}
 	}
 }
@@ -265,8 +264,7 @@ void Tetris::CheckBlockCollide()
 				{
 					(currentBlock)->TransTetrisBlock(0.0, 1.0, 0.0);
 					PlaceBlock();
-					//(currentBlock)->LoadTetrisBlock();
-					//CheckWallCollide();
+
 					break;
 				}
 			}
@@ -287,8 +285,7 @@ bool Tetris::CheckWallBlockCollide()
 				if ((currentBlock)->GetEntities()[i].GetPosition().x == (tBlocks)[j].GetPosition().x && (currentBlock)->GetEntities()[i].GetPosition().y == (tBlocks)[j].GetPosition().y)
 				{
 					return true;
-					//(currentBlock)->LoadTetrisBlock();
-					//CheckWallCollide();
+
 					break;
 				}
 			}
@@ -376,7 +373,6 @@ void Tetris::CheckGameOver()
 		if(tBlocks[i].GetPosition().y == height)
 		{
 			gameOver = true;
-			//gameStart = false;
 			break;
 		}
 	}
