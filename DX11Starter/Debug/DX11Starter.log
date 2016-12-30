@@ -1,2 +1,14 @@
-﻿  Game.cpp
+﻿  compilation object save succeeded; see G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\Debug\SkyPS.cso
+  compilation object save succeeded; see G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\Debug\SkyVS.cso
+G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\VertexShader.hlsl(86,13-38): warning X3206: 'mul': implicit truncation of vector type
+  
+  compilation object save succeeded; see G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\Debug\VertexShader.cso
+  TetrisBlock.cpp
+  Tetris.cpp
+  Renderer.cpp
+  Mesh.cpp
+  Main.cpp
+  GameEntity.cpp
+  Game.cpp
+  Generating Code...
   DX11Starter.vcxproj -> G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\Debug\DX11Starter.exe

@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Vertex.h"
 #include <math.h>
+#include "WICTextureLoader.h" // From DirectX Tool Kit
+#include "DDSTextureLoader.h"
 
 // For the DirectX Math library
 using namespace DirectX;
@@ -56,6 +58,8 @@ Game::~Game()
 
 	if (vertexShader != nullptr) { delete vertexShader; vertexShader = nullptr;}
 	if (pixelShader != nullptr) { delete pixelShader; pixelShader = nullptr;}
+	if (skyPS != nullptr) { delete skyPS; skyPS = nullptr; }
+	if (skyVS != nullptr) { delete skyVS; skyVS = nullptr; }
 
 	if (render != nullptr) { delete render; render = nullptr;}
 	if (mainCam != nullptr) { delete mainCam; mainCam = nullptr;}
@@ -71,6 +75,12 @@ Game::~Game()
 
 	if (block != nullptr) { delete block; block = nullptr; }
 	if (tetrisGame != nullptr) { delete tetrisGame; tetrisGame = nullptr; }
+
+	if (SVR != nullptr) { SVR->Release(); }
+	if (skyBoxSVR != nullptr) { skyBoxSVR->Release(); }
+	if (sample != nullptr) { sample->Release(); }
+	if (skyRast != nullptr) { skyRast->Release(); }
+	if (skyDepth != nullptr) { skyDepth->Release(); }
 }
 
 // --------------------------------------------------------
@@ -103,19 +113,20 @@ void Game::Init()
 	//Texture time boisssss
 	SVR = 0;
 	skyBoxSVR = 0;
-	DirectX::CreateWICTextureFromFile(device, context, L"Textures/brick.jpg", 0, &SVR);
+	CreateWICTextureFromFile(device, context, L"Textures/brick.jpg", 0, &SVR);
 	//DirectX::CreateWICTextureFromFile(device,context,L"Textures/harambe.jpg",0,&SVR);
 
-	//DirectX::CreateDDSTextureFromFile(device, L"Textures/SunnyCubeMap.dds", 0, &skyBoxSRV);
+	CreateDDSTextureFromFile(device, L"Textures/SunnyCubeMap.dds", 0, &skyBoxSVR);
 
-	D3D11_SAMPLER_DESC sDes;
+	D3D11_SAMPLER_DESC sDes = {};
 	sDes.AddressU = D3D11_TEXTURE_ADDRESS_WRAP; 
 	sDes.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	sDes.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sDes.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sDes.Filter = D3D11_FILTER_ANISOTROPIC;
+	sDes.MaxAnisotropy = 16;
 	sDes.MaxLOD = D3D11_FLOAT32_MAX;
 
-	device->CreateSamplerState(&sDes, &sample);
+	device->CreateSamplerState(&sDes,&sample);
 
 	// Create a rasterizer state so we can render backfaces
 	D3D11_RASTERIZER_DESC rsDesc = {};
@@ -188,6 +199,14 @@ void Game::LoadShaders()
 	pixelShader = new SimplePixelShader(device, context);
 	if(!pixelShader->LoadShaderFile(L"Debug/PixelShader.cso"))	
 		pixelShader->LoadShaderFile(L"PixelShader.cso");
+
+	skyVS = new SimpleVertexShader(device, context);
+	if (!skyVS->LoadShaderFile(L"Debug/SkyVS.cso"))
+		skyVS->LoadShaderFile(L"SkyVS.cso");
+
+	skyPS = new SimplePixelShader(device, context);
+	if (!skyPS->LoadShaderFile(L"Debug/SkyPS.cso"))
+		skyPS->LoadShaderFile(L"SkyPS.cso");
 
 	// You'll notice that the code above attempts to load each
 	// compiled shader file (.cso) from two different relative paths.
@@ -443,6 +462,33 @@ void Game::Draw(float deltaTime, float totalTime)
 		0);
 
 	render->RenderUpdate(context, *mainCam, light1, light2);
+
+	ID3D11Buffer* skyVB = (entities)[4].obj->GetVertexBuffer();
+	ID3D11Buffer* skyIB = (entities)[4].obj->GetIndexBuffer();
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+
+	context->IASetVertexBuffers(0, 1, &skyVB, &stride, &offset);
+	context->IASetIndexBuffer(skyIB, DXGI_FORMAT_R32_UINT, 0);
+
+	skyVS->SetMatrix4x4("view", mainCam->GetView());
+	skyVS->SetMatrix4x4("projection", mainCam->GetProject());
+	skyVS->CopyAllBufferData();
+	skyVS->SetShader();
+
+	skyPS->SetShaderResourceView("Sky", skyBoxSVR);
+	skyPS->SetSamplerState("Sampler", sample);
+	skyPS->CopyAllBufferData();
+	skyPS->SetShader();
+
+	context->RSSetState(skyRast);
+	context->OMSetDepthStencilState(skyDepth, 0);
+
+	context->DrawIndexed((entities)[4].obj->GetIndexCount(), 0, 0);
+
+	context->RSSetState(0);
+	context->OMSetDepthStencilState(0,0);
 
 	// Present the back buffer to the user
 	//  - Puts the final frame we're drawing into the window so the user can see it

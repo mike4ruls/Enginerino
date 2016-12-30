@@ -102,8 +102,6 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 			(*entities)[i].Draw(context);
 		}
 	}
-	
-	
 }
 void Renderer::DrawInstanceObject(ID3D11DeviceContext* context, Mesh &obj,int numOfIn, std::vector<GameEntity> entity)
 {

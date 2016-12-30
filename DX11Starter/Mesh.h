@@ -17,6 +17,7 @@ public:
 	void Draw(ID3D11DeviceContext* context);
 	int GetIndexCount();
 	int GetVertexCount();
+	void CalculateTangents(Vertex* verts, int numVerts, int* indices, int numIndices);
 	void CreateBuffer(Vertex v[], int numOfV, int i[], int numOfI, ID3D11Device &dev);
 	
 private:

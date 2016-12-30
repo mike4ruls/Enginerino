@@ -11,7 +11,6 @@
 #include "Camera.h"
 #include "Material.h"
 #include "Lights.h"
-#include "WICTextureLoader.h"
 #include "TetrisBlock.h"
 #include "Tetris.h"
 
@@ -87,6 +86,9 @@ private:
 	// Wrappers for DirectX shaders to provide simplified functionality
 	SimpleVertexShader* vertexShader = nullptr;
 	SimplePixelShader* pixelShader = nullptr;
+
+	SimpleVertexShader* skyVS = nullptr;
+	SimplePixelShader* skyPS = nullptr;
 
 	ID3D11ShaderResourceView* SVR = nullptr;
 	ID3D11ShaderResourceView* skyBoxSVR = nullptr;
