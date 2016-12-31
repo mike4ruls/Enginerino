@@ -18,18 +18,20 @@ Renderer::~Renderer()
 }
 void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, DirectionalLight light, DirectionalLight light2)
 {
+	int turnOn = 1;
 	if (TetrisGame->gameStart == true) {
-		
-		for (int i = 0; i < (int)board.size(); i++)
+		turnOn = 0;
+		pixelShader->SetData("on", &turnOn, sizeof(int));
+		for (int i = 0; i < (int)board->size(); i++)
 		{
-			vertexShader->SetMatrix4x4("world", board[i].GetWorldMatrix());
+			vertexShader->SetMatrix4x4("world", (*board)[i].GetWorldMatrix());
 			vertexShader->SetMatrix4x4("view", cam.viewMatrix);
 			vertexShader->SetMatrix4x4("projection", cam.projectionMatrix);
 			vertexShader->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
 
 			pixelShader->SetData("light", &light, sizeof(DirectionalLight));
 			pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
-			pixelShader->SetData("surfaceColor", &board[i].mat->surfaceColor, sizeof(XMFLOAT4));
+			pixelShader->SetData("surfaceColor", &(*board)[i].mat->surfaceColor, sizeof(XMFLOAT4));
 
 			vertexShader->CopyAllBufferData();
 			pixelShader->CopyAllBufferData();
@@ -37,7 +39,7 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 			vertexShader->SetShader();
 			pixelShader->SetShader();
 
-			board[i].Draw(context);
+			(*board)[i].Draw(context);
 		}
 		for (int i = 0; i < (int)tBlocks.size(); i++)
 		{
@@ -92,6 +94,7 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 			pixelShader->SetData("surfaceColor", &(*entities)[i].mat->surfaceColor, sizeof(XMFLOAT4));
 			pixelShader->SetSamplerState("basicSampler", (*entities)[i].mat->GetSampler());
 			pixelShader->SetShaderResourceView("diffuseTexture", (*entities)[i].mat->GetSVR());
+			pixelShader->SetData("on", &turnOn, sizeof(int));
 
 			vertexShader->CopyAllBufferData();
 			pixelShader->CopyAllBufferData();

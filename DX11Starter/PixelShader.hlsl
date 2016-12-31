@@ -69,6 +69,7 @@ cbuffer externalData : register(b0)
 	DirectionalLight light;
 	DirectionalLight light2;
 	float4 surfaceColor;
+	int on;
 };
 float4 main(VertexToPixel input) : SV_TARGET
 {
@@ -79,7 +80,11 @@ float4 main(VertexToPixel input) : SV_TARGET
 	float4 finalColor1 = LightOnColor(light, nor) * specular;
 	float4 finalColor2 = LightOnColor(light2, nor) * 0.3;
 
-	float4 textureColor = diffuseTexture.Sample(basicSampler, input.uv);
+	float4 textureColor = { 1.0,1.0,1.0,1.0 };
+
+	if (on == 1) {
+		textureColor = diffuseTexture.Sample(basicSampler, input.uv);
+	}
 	// Just return the input color
 	// - This color (like most values passing through the rasterizer) is 
 	//   interpolated for each pixel between the corresponding vertices 

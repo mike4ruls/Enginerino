@@ -2,7 +2,7 @@
 
 
 
-Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr)
+Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr, int h, int w)
 {
 	shapeBlock = &shape;
 	red = &r;
@@ -15,6 +15,8 @@ Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, 
 	gameStart = false;
 	gameOver = false;
 	score = 0;
+	height = h;
+	width = w;
 
 	tChange = false;
 	pChange = false;
@@ -24,6 +26,7 @@ Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, 
 	tTime = 0.0;
 	timeOfDescent = 4.0;
 	srand((unsigned int)time(NULL));
+	//DrawBoard(height, width);
 }
 
 
@@ -57,7 +60,6 @@ void Tetris::UpdateGame()
 }
 void Tetris::StartGame(int h, int w)
 {
-	ResetGame();
 	height = h;
 	width = w;
 
@@ -138,9 +140,9 @@ TetrisBlock* Tetris::GenerateBlock()
 	SetCurrentBlock(block);
 	return block;
 }
-std::vector<GameEntity> Tetris::GetBoard()
+std::vector<GameEntity>* Tetris::GetBoard()
 {
-	return board;
+	return &board;
 }
 std::vector<GameEntity> Tetris::GetTBlocks()
 {
@@ -376,6 +378,10 @@ void Tetris::CheckGameOver()
 			break;
 		}
 	}
+}
+void Tetris::EndGame()
+{
+	ResetGame();
 }
 void Tetris::ResetGame()
 {

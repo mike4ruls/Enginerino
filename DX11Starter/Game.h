@@ -40,12 +40,15 @@ private:
 	void LoadShaders(); 
 	void CreateMatrices();
 	void CreateBasicGeometry();
+	void LoadSkyBox();
 
 	bool noClick;
 	float distX;
 	float distY;
 	float newPosX;
 	float newPosY;
+
+	int skyBox;
 
 	bool currentState;
 	bool previousState;

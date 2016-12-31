@@ -95,6 +95,8 @@ void Game::Init()
 	LoadShaders();
 	CreateBasicGeometry();
 
+	skyBox = 1;
+
 	noClick = true;
 	newPosX = 0.0;
 	newPosY = 0.0;
@@ -116,7 +118,7 @@ void Game::Init()
 	CreateWICTextureFromFile(device, context, L"Textures/brick.jpg", 0, &SVR);
 	//DirectX::CreateWICTextureFromFile(device,context,L"Textures/harambe.jpg",0,&SVR);
 
-	CreateDDSTextureFromFile(device, L"Textures/SunnyCubeMap.dds", 0, &skyBoxSVR);
+	LoadSkyBox();
 
 	D3D11_SAMPLER_DESC sDes = {};
 	sDes.AddressU = D3D11_TEXTURE_ADDRESS_WRAP; 
@@ -154,7 +156,7 @@ void Game::Init()
 	yellowMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(8.0f, 8.0f, 0.0f, 1.0f), *SVR, *sample);
 	greyMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(5.0f, 5.0f, 5.0f, 1.0f), *SVR, *sample);
 
-	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat, *lightBlueMat, *yellowMat, *greyMat);
+	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat, *lightBlueMat, *yellowMat, *greyMat, 1, 1);
 
 	//block = new TetrisBlock(*cube,*blueMat,2,2);
 	//entities = block->GetEntities();
@@ -177,6 +179,7 @@ void Game::Init()
 	(entities)[3].LoadMaterial(*greenMat);
 
 	render = new Renderer(entities, *vertexShader, *pixelShader, *tetrisGame, *device);
+	render->board = (tetrisGame)->GetBoard();
 
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
@@ -393,10 +396,24 @@ void Game::Update(float deltaTime, float totalTime)
 	{
 		(entities)[3].Translate(-2.0f * deltaTime, +0.0, +0.0f);
 	}
+	if (GetAsyncKeyState(VK_TAB))
+	{
+		currentState = true;
+		if(currentState != previousState)
+		{
+			skyBox += 1;
+			if (skyBox > 3)
+			{
+				skyBox = 1;
+			}
+			LoadSkyBox();	
+		}	
+	}
 
 	(entities)[0].Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
 	(entities)[1].Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
 	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);
+	//(entities)[3].Scale(cos(totalTime)* deltaTime * 2, sin(totalTime)* deltaTime*2.0f, 0.0f);
 	if (tetrisGame->gameStart) {
 		(tetrisGame)->UpdateGame();
 		if (tetrisGame->tChange)
@@ -413,11 +430,13 @@ void Game::Update(float deltaTime, float totalTime)
 		// End Game
 		if (GetAsyncKeyState('U'))
 		{
+			(tetrisGame)->EndGame();
 			(tetrisGame)->gameStart = false;
 		}
 		// Reset Game
 		if (GetAsyncKeyState('I'))
 		{
+			(tetrisGame)->EndGame();
 			(tetrisGame)->StartGame(30, 10);
 		}
 	}
@@ -427,8 +446,6 @@ void Game::Update(float deltaTime, float totalTime)
 		if (GetAsyncKeyState('Y'))
 		{
 			(tetrisGame)->StartGame(30, 10);
-			render->board = (tetrisGame)->GetBoard();
-
 			mainCam->SetTetrisCamera();
 		}
 	}
@@ -495,6 +512,28 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - Do this exactly ONCE PER FRAME (always at the very end of the frame)
 	swapChain->Present(0, 0);
 }
+void Game::LoadSkyBox()
+{
+	switch(skyBox)
+	{
+	case 1:
+	{
+		CreateDDSTextureFromFile(device, L"Textures/SunnyCubeMap.dds", 0, &skyBoxSVR);
+		//CreateDDSTextureFromFile(device, L"Textures/Mars.dds", 0, &skyBoxSVR);
+		break;
+	}
+	case 2:
+	{
+		CreateDDSTextureFromFile(device, L"Textures/Mars.dds", 0, &skyBoxSVR);
+		break;
+	}
+	case 3:
+	{
+		CreateDDSTextureFromFile(device, L"Textures/space.dds", 0, &skyBoxSVR);
+		break;
+	}
+	}
+}
 
 
 #pragma region Mouse Input
@@ -547,6 +586,5 @@ void Game::OnMouseMove(WPARAM buttonState, int x, int y, float deltaTime)
 void Game::OnMouseWheel(float wheelDelta, int x, int y, float deltaTime)
 {
 	mainCam->CheckScrolling(wheelDelta, x, y, deltaTime);
-
 }
 #pragma endregion

@@ -7,15 +7,16 @@
 class Tetris
 {
 public:
-	Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr);
+	Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr, int h, int w);
 	~Tetris();
 
 	void StartGame(int h, int w);
 	void DrawBoard(int height, int width);
 	void UpdateGame();
 	void ResetGame();
+	void EndGame();
 	TetrisBlock* GenerateBlock();
-	std::vector<GameEntity> GetBoard();
+	std::vector<GameEntity>* GetBoard();
 	std::vector<GameEntity> GetTBlocks();
 	std::vector<GameEntity> GetPBlocks();
 	void SetCurrentBlock(TetrisBlock *block);

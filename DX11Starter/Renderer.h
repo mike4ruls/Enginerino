@@ -25,7 +25,7 @@ public:
 	ID3D11Device* device;
 
 	bool gotBoard;
-	std::vector<GameEntity> board;
+	std::vector<GameEntity> *board;
 	std::vector<GameEntity> tBlocks;
 	std::vector<GameEntity> pBlocks;
 
