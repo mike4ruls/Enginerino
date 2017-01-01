@@ -89,6 +89,9 @@
     <ClInclude Include="TetrisBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InstanceStuff.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
@@ -101,6 +104,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="SkyVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="InstancePS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="InstanceVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -60,6 +60,8 @@ Game::~Game()
 	if (pixelShader != nullptr) { delete pixelShader; pixelShader = nullptr;}
 	if (skyPS != nullptr) { delete skyPS; skyPS = nullptr; }
 	if (skyVS != nullptr) { delete skyVS; skyVS = nullptr; }
+	if (instancePS != nullptr) { delete instancePS; instancePS = nullptr; }
+	if (instanceVS != nullptr) { delete instanceVS; instanceVS = nullptr; }
 
 	if (render != nullptr) { delete render; render = nullptr;}
 	if (mainCam != nullptr) { delete mainCam; mainCam = nullptr;}
@@ -178,7 +180,7 @@ void Game::Init()
 	(entities)[2].LoadMaterial(*blueMat);
 	(entities)[3].LoadMaterial(*greenMat);
 
-	render = new Renderer(entities, *vertexShader, *pixelShader, *tetrisGame, *device);
+	render = new Renderer(entities, *vertexShader, *pixelShader, *instanceVS, *instancePS, *tetrisGame, *device);
 	render->board = (tetrisGame)->GetBoard();
 
 	// Tell the input assembler stage of the pipeline what kind of
@@ -210,6 +212,14 @@ void Game::LoadShaders()
 	skyPS = new SimplePixelShader(device, context);
 	if (!skyPS->LoadShaderFile(L"Debug/SkyPS.cso"))
 		skyPS->LoadShaderFile(L"SkyPS.cso");
+
+	instanceVS = new SimpleVertexShader(device, context);
+	if (!instanceVS->LoadShaderFile(L"Debug/InstanceVS.cso"))
+		instanceVS->LoadShaderFile(L"InstanceVS.cso");
+
+	instancePS = new SimplePixelShader(device, context);
+	if (!instancePS->LoadShaderFile(L"Debug/InstancePS.cso"))
+		instancePS->LoadShaderFile(L"InstancePS.cso");
 
 	// You'll notice that the code above attempts to load each
 	// compiled shader file (.cso) from two different relative paths.
@@ -415,15 +425,17 @@ void Game::Update(float deltaTime, float totalTime)
 	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);
 	//(entities)[3].Scale(cos(totalTime)* deltaTime * 2, sin(totalTime)* deltaTime*2.0f, 0.0f);
 	if (tetrisGame->gameStart) {
-		(tetrisGame)->UpdateGame();
+		(tetrisGame)->UpdateGame(deltaTime);
 		if (tetrisGame->tChange)
 		{
 			render->tBlocks = (tetrisGame)->GetTBlocks();
+			render->LoadAllBlocks();
 			tetrisGame->tChange = false;
 		}
 		if (tetrisGame->pChange)
 		{
 			render->pBlocks = (tetrisGame)->GetPBlocks();
+			render->LoadAllBlocks();
 			tetrisGame->pChange = false;
 		}
 
@@ -446,6 +458,7 @@ void Game::Update(float deltaTime, float totalTime)
 		if (GetAsyncKeyState('Y'))
 		{
 			(tetrisGame)->StartGame(30, 10);
+			render->LoadAllBlocks();
 			mainCam->SetTetrisCamera();
 		}
 	}

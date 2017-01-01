@@ -12,7 +12,7 @@ public:
 
 	void StartGame(int h, int w);
 	void DrawBoard(int height, int width);
-	void UpdateGame();
+	void UpdateGame(float deltaTime);
 	void ResetGame();
 	void EndGame();
 	TetrisBlock* GenerateBlock();

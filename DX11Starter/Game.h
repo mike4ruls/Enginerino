@@ -93,6 +93,9 @@ private:
 	SimpleVertexShader* skyVS = nullptr;
 	SimplePixelShader* skyPS = nullptr;
 
+	SimpleVertexShader* instanceVS = nullptr;
+	SimplePixelShader* instancePS = nullptr;
+
 	ID3D11ShaderResourceView* SVR = nullptr;
 	ID3D11ShaderResourceView* skyBoxSVR = nullptr;
 	ID3D11SamplerState* sample = nullptr;

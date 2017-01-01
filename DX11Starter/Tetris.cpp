@@ -24,7 +24,7 @@ Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, 
 	currentState = false;
 	previousState = false;
 	tTime = 0.0;
-	timeOfDescent = 4.0;
+	timeOfDescent = 1.0;
 	srand((unsigned int)time(NULL));
 	//DrawBoard(height, width);
 }
@@ -36,7 +36,7 @@ Tetris::~Tetris()
 	if (futureBlock != nullptr) { delete futureBlock; futureBlock = nullptr; }
 
 }
-void Tetris::UpdateGame()
+void Tetris::UpdateGame(float deltaTime)
 {
 	if (gameOver != true) 
 	{
@@ -47,7 +47,7 @@ void Tetris::UpdateGame()
 		CheckForLine();
 		CheckGameOver();
 		
-		tTime += (float)0.1;
+		tTime += (float)1.0 * deltaTime;
 		previousState = currentState;
 		(currentBlock)->LoadTetrisBlock();
 		SetFutureBlock();

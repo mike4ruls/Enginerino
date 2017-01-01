@@ -2,26 +2,47 @@
 
 
 using namespace DirectX;
-Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, Tetris &Tet, ID3D11Device &dev)
+Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, SimpleVertexShader &iv, SimplePixelShader &ip, Tetris &Tet, ID3D11Device &dev)
 {
 	entities = &en;
 	vertexShader = &vShader;
 	pixelShader = &pShader;
+	instanceVS = &iv;
+	instancePS = &ip;
 	TetrisGame = &Tet;
 	gotBoard = false;
 	device = &dev;
+	turnOn = 1;
+
+	instanceStuff= new InstanceStuff[1000];
+
+	D3D11_BUFFER_DESC instDesc = {};
+	instDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instDesc.ByteWidth = sizeof(InstanceStuff) * 1000;
+	instDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	instDesc.MiscFlags = 0;
+	instDesc.StructureByteStride = 0;
+	instDesc.Usage = D3D11_USAGE_DYNAMIC;
+	device->CreateBuffer(&instDesc, 0, &instanceStuffBuff);
+
 }
 
 
 Renderer::~Renderer()
 {
+	if (instanceStuff != nullptr) { delete instanceStuff; instanceStuff = nullptr; }
+	if (instanceStuffBuff != nullptr) { instanceStuffBuff->Release();  instanceStuffBuff = nullptr; }
 }
 void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, DirectionalLight light, DirectionalLight light2)
 {
-	int turnOn = 1;
+	
 	if (TetrisGame->gameStart == true) {
 		turnOn = 0;
 		pixelShader->SetData("on", &turnOn, sizeof(int));
+
+
+		// The Dark days of rendering everything over and over...
+		/*
 		for (int i = 0; i < (int)board->size(); i++)
 		{
 			vertexShader->SetMatrix4x4("world", (*board)[i].GetWorldMatrix());
@@ -79,6 +100,10 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 
 			pBlocks[i].Draw(context);
 		}
+		*/
+
+
+		DrawInstanceObject(context, cam, light, light2, (int)(allBlocks).size(),  allBlocks);
 	}
 	else
 	{
@@ -106,44 +131,71 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 		}
 	}
 }
-void Renderer::DrawInstanceObject(ID3D11DeviceContext* context, Mesh &obj,int numOfIn, std::vector<GameEntity> entity)
+void Renderer::DrawInstanceObject(ID3D11DeviceContext* context, Camera cam, DirectionalLight light, DirectionalLight light2,int numOfIn, std::vector<GameEntity> entity)
 {
-	instanceData = new XMFLOAT4X4[numOfIn];
-	D3D11_BUFFER_DESC instDesc = {};
-	instDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	instDesc.ByteWidth = sizeof(XMFLOAT4X4) * numOfIn;
-	instDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	instDesc.MiscFlags = 0;
-	instDesc.StructureByteStride = 0;
-	instDesc.Usage = D3D11_USAGE_DYNAMIC;
-	device->CreateBuffer(&instDesc, 0, &instanceWorldMatrixBuff);
+	if (instanceStuff != nullptr) { delete instanceStuff; instanceStuff = nullptr; }
+	instanceStuff = new InstanceStuff[numOfIn];
 
 	for (int i = 0; i < (int)(entity).size(); i++)
 	{
-		XMMATRIX worldMat = XMMatrixTranspose(XMLoadFloat4x4(&entity[i].GetWorldMatrix()));
-		XMStoreFloat4x4(&instanceData[i], XMMatrixTranspose(worldMat));
+		XMStoreFloat4x4(&instanceStuff[i].worldMatr, XMLoadFloat4x4(&entity[i].GetWorldMatrix()));
+		XMStoreFloat4(&instanceStuff[i].surColor, XMLoadFloat4(&entity[i].mat->surfaceColor));
 	}
 
 	D3D11_MAPPED_SUBRESOURCE mapped = {};
-	context->Map(instanceWorldMatrixBuff, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	context->Map(instanceStuffBuff, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
 
 	// Copy to the resource
-	memcpy(mapped.pData, instanceData, sizeof(XMFLOAT4X4) * numOfIn);
+	memcpy(mapped.pData, instanceStuff, sizeof(InstanceStuff) * numOfIn);
 
 	// Unmap so the GPU can use it again
-	context->Unmap(instanceWorldMatrixBuff, 0);
+	context->Unmap(instanceStuffBuff, 0);
 
-	ID3D11Buffer* vbs[2] = {obj.GetVertexBuffer() ,instanceWorldMatrixBuff	};
-	UINT strides[2] = { sizeof(Vertex), sizeof(XMFLOAT4X4) };
+
+	ID3D11Buffer* vbs[2] = { entity[0].obj->GetVertexBuffer() ,instanceStuffBuff};
+	UINT strides[2] = { sizeof(Vertex), sizeof(InstanceStuff) };
 	UINT offsets[2] = { 0, 0 };
 
-	ID3D11Buffer* ib = obj.GetIndexBuffer();
+	ID3D11Buffer* ib = entity[0].obj->GetIndexBuffer();
 
 	context->IASetVertexBuffers(0, 2, vbs, strides, offsets);
 	context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
 
-	context->DrawIndexedInstanced(obj.GetIndexCount(),numOfIn,0,0,0); 
+	instanceVS->SetMatrix4x4("world", (*board)[0].GetWorldMatrix());
+	instanceVS->SetMatrix4x4("view", cam.viewMatrix);
+	instanceVS->SetMatrix4x4("projection", cam.projectionMatrix);
+	instanceVS->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
+
+	instanceVS->CopyAllBufferData();
+	instanceVS->SetShader();
+
+	instancePS->SetData("light", &light, sizeof(DirectionalLight));
+	instancePS->SetData("light2", &light2, sizeof(DirectionalLight));
+	instancePS->SetData("surfaceColor", &(*entities)[0].mat->surfaceColor, sizeof(XMFLOAT4));
+	instancePS->SetSamplerState("basicSampler", (*entities)[0].mat->GetSampler());
+	instancePS->SetShaderResourceView("diffuseTexture", (*entities)[0].mat->GetSVR());
+	instancePS->SetData("on", &turnOn, sizeof(int));
+
+	instancePS->CopyAllBufferData();
+	instancePS->SetShader();
+
+	context->DrawIndexedInstanced(entity[0].obj->GetIndexCount(),numOfIn,0,0,0);
 }
-	
+void Renderer::LoadAllBlocks()
+{
+	allBlocks.clear();
+	for (int i = 0; i < (int)board->size(); i++)
+	{
+		allBlocks.push_back((*board)[i]);
+	}
+	for (int i = 0; i < (int)tBlocks.size(); i++)
+	{
+		allBlocks.push_back((tBlocks)[i]);
+	}
+	for (int i = 0; i < (int)pBlocks.size(); i++)
+	{
+		allBlocks.push_back((pBlocks)[i]);
+	}
+}
 
 
