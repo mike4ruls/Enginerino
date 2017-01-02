@@ -31,7 +31,7 @@ int WINAPI WinMain(
 	if(FAILED(hr)) return hr;
 #if defined(DEBUG) || defined(_DEBUG)
 	// Do we want a console window?  Probably only in debug mode
-	dxGame.CreateConsoleWindow(500, 120, 32, 120);
+	dxGame.CreateConsoleWindow(6, 1, 6, 119);
 	//printf("Console window created successfully.  Feel free to printf() here.");
 #endif
 

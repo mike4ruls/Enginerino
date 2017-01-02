@@ -32,6 +32,7 @@ public:
 	int turnOn;
 
 	bool gotBoard;
+	bool freeRoam;
 	std::vector<GameEntity> *board;
 	std::vector<GameEntity> *scoreBlocks;
 	std::vector<GameEntity> *otherBlocks;

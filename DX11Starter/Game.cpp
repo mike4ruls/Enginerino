@@ -19,8 +19,8 @@ Game::Game(HINSTANCE hInstance)
 	: DXCore( 
 		hInstance,		   // The application's handle
 		"DirectX Game",	   // Text for the window's title bar
-		1280,			   // Width of the window's client area
-		720,			   // Height of the window's client area
+		1200,			   // Width of the window's client area
+		640,			   // Height of the window's client area
 		true)			   // Show extra stats (fps) in title bar?
 {
 	// Initialize fields
@@ -75,11 +75,11 @@ Game::~Game()
 	if (tetrisGame != nullptr) { delete tetrisGame; tetrisGame = nullptr; }
 	if (cB != nullptr) { delete cB; cB = nullptr; }
 
-	if (SVR != nullptr) { SVR->Release(); }
-	if (skyBoxSVR != nullptr) { skyBoxSVR->Release(); }
-	if (sample != nullptr) { sample->Release(); }
-	if (skyRast != nullptr) { skyRast->Release(); }
-	if (skyDepth != nullptr) { skyDepth->Release(); }
+	if (SVR != nullptr) { SVR->Release(); SVR = nullptr; }
+	if (skyBoxSVR != nullptr) { skyBoxSVR->Release(); skyBoxSVR = nullptr; }
+	if (sample != nullptr) { sample->Release(); sample = nullptr; }
+	if (skyRast != nullptr) { skyRast->Release(); skyRast = nullptr; }
+	if (skyDepth != nullptr) { skyDepth->Release(); skyDepth = nullptr; }
 }
 
 // --------------------------------------------------------
@@ -179,7 +179,7 @@ void Game::Init()
 
 	render = new Renderer(entities, *vertexShader, *pixelShader, *instanceVS, *instancePS, *tetrisGame, *device);
 	render->board = (tetrisGame)->GetBoard();
-	cB = new ConsoleBuddy(*tetrisGame);
+	cB = new ConsoleBuddy(*tetrisGame, *render, *mainCam);
 
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
@@ -370,6 +370,7 @@ void Game::OnResize()
 void Game::Update(float deltaTime, float totalTime)
 {
 	mainCam->Update(deltaTime);
+	cB->UpdateCB(deltaTime);
 
 	// Testing entities
 	{
@@ -432,6 +433,10 @@ void Game::Update(float deltaTime, float totalTime)
 	//Tetris Input Stuff (Start, End, Reset)
 	{
 	if (tetrisGame->gameStart) {
+		if (GetAsyncKeyState(VK_LCONTROL) && GetAsyncKeyState('C'))
+		{
+			mainCam->SetTetrisCamera();
+		}
 		(tetrisGame)->UpdateGame(deltaTime, totalTime);
 		if (tetrisGame->tChange)
 		{
@@ -458,7 +463,6 @@ void Game::Update(float deltaTime, float totalTime)
 		{
 			(tetrisGame)->EndGame();
 			(tetrisGame)->StartGame(30, 10);
-			cB->playerStatus = 3;
 		}
 	}
 	else
@@ -468,13 +472,14 @@ void Game::Update(float deltaTime, float totalTime)
 		{
 			(tetrisGame)->StartGame(30, 10);
 			render->LoadAllBlocks();
+			render->freeRoam = true;
 			mainCam->SetTetrisCamera();
 			cB->playerStatus = 1;
 		}
 	}
 }
 
-	cB->UpdateCB(deltaTime);
+
 	previousState = currentState;
 	//entities.clear();
 	//entities = block->GetEntities();
@@ -539,6 +544,7 @@ void Game::Draw(float deltaTime, float totalTime)
 }
 void Game::LoadSkyBox()
 {
+	if (skyBoxSVR != nullptr) { skyBoxSVR->Release(); skyBoxSVR = nullptr; }
 	switch(skyBox)
 	{
 	case 1:

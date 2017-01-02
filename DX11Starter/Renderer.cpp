@@ -13,6 +13,7 @@ Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, Sim
 	gotBoard = false;
 	device = &dev;
 	turnOn = 1;
+	freeRoam = false;
 
 	scoreBlocks = &TetrisGame->scoreBlocks;
 	otherBlocks = &TetrisGame->otherBlocks;
@@ -107,7 +108,7 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 
 
 		DrawInstanceObject(context, cam, light, light2, (int)(allBlocks).size(),  allBlocks);
-		if (TetrisGame->gameOver == true) 
+		/*if (TetrisGame->gameOver == true) 
 		{
 			for (int i = 0; i < (int)otherBlocks->size(); i++)
 			{
@@ -128,31 +129,33 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 
 				(*otherBlocks)[i].Draw(context);
 			}
-		}
+		}*/
 	}
 	else
 	{
-		for (int i = 0; i < (int)(*entities).size(); i++)
-		{
-			vertexShader->SetMatrix4x4("world", (*entities)[i].GetWorldMatrix());
-			vertexShader->SetMatrix4x4("view", cam.viewMatrix);
-			vertexShader->SetMatrix4x4("projection", cam.projectionMatrix);
-			vertexShader->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
+		if (freeRoam) {
+			for (int i = 0; i < (int)(*entities).size(); i++)
+			{
+				vertexShader->SetMatrix4x4("world", (*entities)[i].GetWorldMatrix());
+				vertexShader->SetMatrix4x4("view", cam.viewMatrix);
+				vertexShader->SetMatrix4x4("projection", cam.projectionMatrix);
+				vertexShader->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
 
-			pixelShader->SetData("light", &light, sizeof(DirectionalLight));
-			pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
-			pixelShader->SetData("surfaceColor", &(*entities)[i].mat->surfaceColor, sizeof(XMFLOAT4));
-			pixelShader->SetSamplerState("basicSampler", (*entities)[i].mat->GetSampler());
-			pixelShader->SetShaderResourceView("diffuseTexture", (*entities)[i].mat->GetSVR());
-			pixelShader->SetData("on", &turnOn, sizeof(int));
+				pixelShader->SetData("light", &light, sizeof(DirectionalLight));
+				pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
+				pixelShader->SetData("surfaceColor", &(*entities)[i].mat->surfaceColor, sizeof(XMFLOAT4));
+				pixelShader->SetSamplerState("basicSampler", (*entities)[i].mat->GetSampler());
+				pixelShader->SetShaderResourceView("diffuseTexture", (*entities)[i].mat->GetSVR());
+				pixelShader->SetData("on", &turnOn, sizeof(int));
 
-			vertexShader->CopyAllBufferData();
-			pixelShader->CopyAllBufferData();
+				vertexShader->CopyAllBufferData();
+				pixelShader->CopyAllBufferData();
 
-			vertexShader->SetShader();
-			pixelShader->SetShader();
+				vertexShader->SetShader();
+				pixelShader->SetShader();
 
-			(*entities)[i].Draw(context);
+				(*entities)[i].Draw(context);
+			}
 		}
 	}
 }

@@ -94,6 +94,7 @@ void Tetris::StartGame(int h, int w)
 
 void Tetris::DrawBoard(int height, int width)
 {
+	board.clear();
 	for (int i = 0; i < height; i++)
 	{
 		GameEntity wall = GameEntity(*shapeBlock,"wall",*lightBlue);
@@ -127,32 +128,32 @@ TetrisBlock* Tetris::GenerateBlock()
 	{
 	case 1:
 	{
-		block = new TetrisBlock(*shapeBlock, *blue, 1, 2);
+		block = new TetrisBlock(*shapeBlock, *blue, ranBlock, 2);
 		break;
 	}
 	case 2:
 	{
-		block = new TetrisBlock(*shapeBlock, *green,1, 2);
+		block = new TetrisBlock(*shapeBlock, *green, ranBlock, 2);
 		break;
 	}
 	case 3:
 	{
-		block = new TetrisBlock(*shapeBlock, *purple, 1, 2);
+		block = new TetrisBlock(*shapeBlock, *purple, ranBlock, 2);
 		break;
 	}
 	case 4:
 	{
-		block = new TetrisBlock(*shapeBlock, *yellow, 1, 2);
+		block = new TetrisBlock(*shapeBlock, *yellow, ranBlock, 2);
 		break;
 	}
 	case 5:
 	{
-		block = new TetrisBlock(*shapeBlock, *grey, 1, 2);
+		block = new TetrisBlock(*shapeBlock, *grey, ranBlock, 2);
 		break;
 	}
 	case 6:
 	{
-		block = new TetrisBlock(*shapeBlock, *red, 1, 2);
+		block = new TetrisBlock(*shapeBlock, *red, ranBlock, 2);
 		break;
 	}
 	}
@@ -507,6 +508,12 @@ void Tetris::ResetGame()
 
 	score = 0;
 	tTime = 0.0;
+	
+	scoreCol = 1;
+	scoreRow = 0;
+
+	pChange = true;
+	tChange = true;
 }
 void Tetris::AddToScore()
 {
