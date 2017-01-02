@@ -13,6 +13,7 @@
 #include "Lights.h"
 #include "TetrisBlock.h"
 #include "Tetris.h"
+#include "ConsoleBuddy.h"
 
 class Game 
 	: public DXCore
@@ -56,6 +57,8 @@ private:
 	std::vector<GameEntity> entities;
 	Camera *mainCam = nullptr;
 	Renderer *render = nullptr;
+
+	ConsoleBuddy* cB = nullptr;
 
 	Material *defaultMat = nullptr;
 	Material *redMat = nullptr;

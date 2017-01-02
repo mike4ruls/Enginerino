@@ -29,6 +29,11 @@ int WINAPI WinMain(
 	// exit early if something failed
 	hr = dxGame.InitWindow();
 	if(FAILED(hr)) return hr;
+#if defined(DEBUG) || defined(_DEBUG)
+	// Do we want a console window?  Probably only in debug mode
+	dxGame.CreateConsoleWindow(500, 120, 32, 120);
+	//printf("Console window created successfully.  Feel free to printf() here.");
+#endif
 
 	// Attempt to initialize DirectX, and exit
 	// early if something failed

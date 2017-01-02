@@ -228,7 +228,7 @@ void Camera::UpdateNewPos(WPARAM buttonState, int x, int y)
 	}
 	newRotX += distX;
 	newRotY += distY;
-	printf("New X dist:%f, New Y dist:%f\n", newRotX, newRotY);
+	//printf("New X dist:%f, New Y dist:%f\n", newRotX, newRotY);
 	
 }
 
@@ -253,7 +253,7 @@ void Camera::OnMouseMove(WPARAM buttonState, int x, int y, float deltaTime)
 		distX = (x - prevMousePos.x)*-0.01f;
 		distY = (y - prevMousePos.y)*0.01f;
 
-		printf("X dist:%f, Y dist:%f\n", distX, distY);
+		//printf("X dist:%f, Y dist:%f\n", distX, distY);
 
 		if(buttonState & 0x0001)
 		{

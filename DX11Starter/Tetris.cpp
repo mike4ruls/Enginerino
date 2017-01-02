@@ -187,6 +187,7 @@ void Tetris::SetFutureBlock()
 }
 void Tetris::MoveBlock()
 {
+	timeOfDescent = 1.0;
 	if (GetAsyncKeyState(VK_RETURN))
 	{
 		currentState = true;
@@ -222,9 +223,9 @@ void Tetris::MoveBlock()
 	if (GetAsyncKeyState(VK_DOWN))
 	{
 		currentState = true;
-		currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
+		timeOfDescent = 0.05f;
+		//currentBlock->TransTetrisBlock(0.0, -1.0, 0.0);
 		tChange = true;
-		tTime = 0.0;
 	}
 
 	if (tTime >= timeOfDescent)

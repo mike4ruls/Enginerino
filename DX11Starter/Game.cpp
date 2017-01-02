@@ -27,11 +27,7 @@ Game::Game(HINSTANCE hInstance)
 	vertexShader = 0;
 	pixelShader = 0;
 
-#if defined(DEBUG) || defined(_DEBUG)
-	// Do we want a console window?  Probably only in debug mode
-	CreateConsoleWindow(500, 120, 32, 120);
-	printf("Console window created successfully.  Feel free to printf() here.");
-#endif
+
 }
 
 // --------------------------------------------------------
@@ -77,6 +73,7 @@ Game::~Game()
 
 	if (block != nullptr) { delete block; block = nullptr; }
 	if (tetrisGame != nullptr) { delete tetrisGame; tetrisGame = nullptr; }
+	if (cB != nullptr) { delete cB; cB = nullptr; }
 
 	if (SVR != nullptr) { SVR->Release(); }
 	if (skyBoxSVR != nullptr) { skyBoxSVR->Release(); }
@@ -182,6 +179,7 @@ void Game::Init()
 
 	render = new Renderer(entities, *vertexShader, *pixelShader, *instanceVS, *instancePS, *tetrisGame, *device);
 	render->board = (tetrisGame)->GetBoard();
+	cB = new ConsoleBuddy(*tetrisGame);
 
 	// Tell the input assembler stage of the pipeline what kind of
 	// geometric primitives (points, lines or triangles) we want to draw.  
@@ -370,60 +368,67 @@ void Game::OnResize()
 void Game::Update(float deltaTime, float totalTime)
 {
 	mainCam->Update(deltaTime);
-	
-	//For Testing purposes
-	/*
-	if (GetAsyncKeyState(VK_UP))
+
+	// Testing entities
 	{
-		currentState = true;
-		if (currentState != previousState) {
-			block->rot += 1;
-			block->LoadTetrisBlock();
-		}
-	}
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		currentState = true;
-		if (currentState != previousState) {
-			block->type += 1;
-			block->LoadTetrisBlock();
-		}
-	}*/
-	
-	if (GetAsyncKeyState(VK_UP))
-	{
-		(entities)[3].Translate(+0.0f, +2.0f * deltaTime, +0.0f);
-	}
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		(entities)[3].Translate(+2.0f * deltaTime, +0.0f, +0.0f);
-	}
-	if (GetAsyncKeyState(VK_DOWN))
-	{
-		(entities)[3].Translate(+0.0f, -2.0f * deltaTime, +0.0f);
-	}
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		(entities)[3].Translate(-2.0f * deltaTime, +0.0, +0.0f);
-	}
-	if (GetAsyncKeyState(VK_TAB))
-	{
-		currentState = true;
-		if(currentState != previousState)
+		//For Testing purposes
+		/*
+		if (GetAsyncKeyState(VK_UP))
 		{
-			skyBox += 1;
-			if (skyBox > 3)
-			{
-				skyBox = 1;
+			currentState = true;
+			if (currentState != previousState) {
+				block->rot += 1;
+				block->LoadTetrisBlock();
 			}
-			LoadSkyBox();	
-		}	
+		}
+		if (GetAsyncKeyState(VK_LEFT))
+		{
+			currentState = true;
+			if (currentState != previousState) {
+				block->type += 1;
+				block->LoadTetrisBlock();
+			}
+		}*/
+
+		if (GetAsyncKeyState(VK_UP))
+		{
+			(entities)[3].Translate(+0.0f, +2.0f * deltaTime, +0.0f);
+		}
+		if (GetAsyncKeyState(VK_RIGHT))
+		{
+			(entities)[3].Translate(+2.0f * deltaTime, +0.0f, +0.0f);
+		}
+		if (GetAsyncKeyState(VK_DOWN))
+		{
+			(entities)[3].Translate(+0.0f, -2.0f * deltaTime, +0.0f);
+		}
+		if (GetAsyncKeyState(VK_LEFT))
+		{
+			(entities)[3].Translate(-2.0f * deltaTime, +0.0, +0.0f);
+		}
+		if (GetAsyncKeyState(VK_TAB))
+		{
+			currentState = true;
+			if (currentState != previousState)
+			{
+				skyBox += 1;
+				if (skyBox > 3)
+				{
+					skyBox = 1;
+				}
+				LoadSkyBox();
+			}
+		}
+
+
+		(entities)[0].Translate(sin(totalTime * 2)* deltaTime*5.0f, 0.0f, 0.0f);
+		(entities)[1].Translate(cos(totalTime)* deltaTime * 2, sin(totalTime)* deltaTime*2.0f, 0.0f);
+		(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);
+		//(entities)[3].Scale(cos(totalTime)* deltaTime * 2, sin(totalTime)* deltaTime*2.0f, 0.0f);
 	}
 
-	(entities)[0].Translate(sin(totalTime*2)* deltaTime*5.0f,0.0f,0.0f);
-	(entities)[1].Translate(cos(totalTime)* deltaTime*2, sin(totalTime)* deltaTime*2.0f, 0.0f);
-	(entities)[2].Translate(0.0f, cos(totalTime)* deltaTime, 0.0f);
-	//(entities)[3].Scale(cos(totalTime)* deltaTime * 2, sin(totalTime)* deltaTime*2.0f, 0.0f);
+	//Tetris Input Stuff (Start, End, Reset)
+	{
 	if (tetrisGame->gameStart) {
 		(tetrisGame)->UpdateGame(deltaTime);
 		if (tetrisGame->tChange)
@@ -444,25 +449,30 @@ void Game::Update(float deltaTime, float totalTime)
 		{
 			(tetrisGame)->EndGame();
 			(tetrisGame)->gameStart = false;
+			cB->playerStatus = 2;
 		}
 		// Reset Game
 		if (GetAsyncKeyState('I'))
 		{
 			(tetrisGame)->EndGame();
 			(tetrisGame)->StartGame(30, 10);
+			cB->playerStatus = 3;
 		}
 	}
 	else
 	{
 		// Start game
-		if (GetAsyncKeyState('Y'))
+		if (GetAsyncKeyState('Y') || cB->playerStatus == 1)
 		{
 			(tetrisGame)->StartGame(30, 10);
 			render->LoadAllBlocks();
 			mainCam->SetTetrisCamera();
+			cB->playerStatus = 1;
 		}
 	}
-	
+}
+
+	cB->UpdateCB(deltaTime);
 	previousState = currentState;
 	//entities.clear();
 	//entities = block->GetEntities();

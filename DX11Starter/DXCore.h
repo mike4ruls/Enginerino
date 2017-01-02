@@ -49,6 +49,8 @@ public:
 	virtual void OnMouseUp	 (WPARAM buttonState, int x, int y) { }
 	virtual void OnMouseMove (WPARAM buttonState, int x, int y, float deltaTime) { }
 	virtual void OnMouseWheel(float wheelDelta,   int x, int y, float deltaTime) { }
+
+	void CreateConsoleWindow(int bufferLines, int bufferColumns, int windowLines, int windowColumns);
 	
 protected:
 	HINSTANCE	hInstance;		// The handle to the application
@@ -70,7 +72,7 @@ protected:
 	ID3D11DepthStencilView* depthStencilView;
 
 	// Helper function for allocating a console window
-	void CreateConsoleWindow(int bufferLines, int bufferColumns, int windowLines, int windowColumns);
+
 
 private:
 	// Timing related data
