@@ -2,7 +2,7 @@
 
 
 
-Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr, int h, int w)
+Tetris::Tetris(Mesh &shape, GameEntity &gm, GameEntity &ovr, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr, int h, int w)
 {
 	shapeBlock = &shape;
 	red = &r;
@@ -24,7 +24,9 @@ Tetris::Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, 
 	currentState = false;
 	previousState = false;
 	tTime = 0.0;
-	timeOfDescent = 1.0;
+	timeOfDescent = 1.0f;
+	scoreCol = 1;
+	scoreRow = 0;
 	srand((unsigned int)time(NULL));
 	//DrawBoard(height, width);
 }
@@ -36,7 +38,7 @@ Tetris::~Tetris()
 	if (futureBlock != nullptr) { delete futureBlock; futureBlock = nullptr; }
 
 }
-void Tetris::UpdateGame(float deltaTime)
+void Tetris::UpdateGame(float deltaTime, float totalTime)
 {
 	if (gameOver != true) 
 	{
@@ -47,6 +49,17 @@ void Tetris::UpdateGame(float deltaTime)
 		CheckForLine();
 		CheckGameOver();
 		
+		//Testing AddScore()
+		
+		/*
+		if (GetAsyncKeyState('N'))
+		{
+			currentState = true;
+			if (currentState != previousState) {
+				AddToScore();
+			}
+		}*/
+		
 		tTime += (float)1.0 * deltaTime;
 		previousState = currentState;
 		(currentBlock)->LoadTetrisBlock();
@@ -56,6 +69,12 @@ void Tetris::UpdateGame(float deltaTime)
 	else
 	{
 
+	}
+	for (unsigned int i = 0; i < scoreBlocks.size(); i++)
+	{
+		//float scale = sin(((float)(scoreBlocks[i].GetPosition().x + scoreBlocks[i].GetPosition().y + scoreBlocks[i].GetPosition().z)*2.0f) + totalTime) * (deltaTime*0.2f);
+		scoreBlocks[i].Rotate(0.0f, ((totalTime * 3.0f)) - scoreBlocks[i].GetRotation().y, ((totalTime * ((float)i*1.5f))) -scoreBlocks[i].GetRotation().z);
+		//scoreBlocks[i].Scale(scale, scale, scale);
 	}
 }
 void Tetris::StartGame(int h, int w)
@@ -108,32 +127,32 @@ TetrisBlock* Tetris::GenerateBlock()
 	{
 	case 1:
 	{
-		block = new TetrisBlock(*shapeBlock, *blue, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *blue, 1, 2);
 		break;
 	}
 	case 2:
 	{
-		block = new TetrisBlock(*shapeBlock, *green, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *green,1, 2);
 		break;
 	}
 	case 3:
 	{
-		block = new TetrisBlock(*shapeBlock, *purple, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *purple, 1, 2);
 		break;
 	}
 	case 4:
 	{
-		block = new TetrisBlock(*shapeBlock, *yellow, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *yellow, 1, 2);
 		break;
 	}
 	case 5:
 	{
-		block = new TetrisBlock(*shapeBlock, *grey, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *grey, 1, 2);
 		break;
 	}
 	case 6:
 	{
-		block = new TetrisBlock(*shapeBlock, *red, ranBlock, 2);
+		block = new TetrisBlock(*shapeBlock, *red, 1, 2);
 		break;
 	}
 	}
@@ -187,7 +206,24 @@ void Tetris::SetFutureBlock()
 }
 void Tetris::MoveBlock()
 {
-	timeOfDescent = 1.0;
+	if (score <= 5)
+	{
+		timeOfDescent = 1.0f;
+	}
+	else if (score <= 10)
+	{
+		timeOfDescent = 0.6f;
+	}
+	else if (score <= 20)
+	{
+		timeOfDescent = 0.2f;
+	}
+	else if (score <= 30)
+	{
+		timeOfDescent = 0.09f;
+	}
+
+
 	if (GetAsyncKeyState(VK_RETURN))
 	{
 		currentState = true;
@@ -323,7 +359,9 @@ void Tetris::PlaceBlock()
 void Tetris::CheckForLine()
 {
 	std::vector<int> spot;
+	std::vector<int> heig;
 	int numOfBlocks = 0;
+	int lines = 0;
 
 	for (int i = 1; i < height; i++) 
 	{
@@ -335,27 +373,104 @@ void Tetris::CheckForLine()
 				spot.push_back(j);
 			}
 		}
+
 		if(numOfBlocks == width)
 		{
-			for (int j = 0; j < (int)(spot).size();j++)
+			lines += 1;
+			heig.push_back(i);
+			
+		}
+		else
+		{
+			if (lines == 0)
 			{
-				for (int k = j; k < (int)(spot).size(); k++)
+				spot.clear();
+			}
+			else
+			{
+				for (int i = 0; i < numOfBlocks; i++)
 				{
-					if(spot[j]<spot[k])
+					spot.pop_back();
+				}
+			}
+		}
+		
+		
+		pChange = true;
+		numOfBlocks = 0;
+		
+	}
+	if(lines > 0)
+	{
+		// Swap numbers in order
+		for (int j = 0; j < (int)(spot).size(); j++)
+		{
+			for (int k = j; k < (int)(spot).size(); k++)
+			{
+				if (spot[j]<spot[k])
+				{
+					std::iter_swap(spot.begin() + j, spot.begin() + k);
+				}
+			}
+		}
+		// Starts Deleting them
+		for (int k = (int)(spot).size() - 1; k >= 0; k--)
+		{
+			if (k == (int)(spot).size() - 1)
+			{
+				if (tBlocks[spot[k]].GetPosition().z >= 100.0)
+				{
+
+				}
+				else
+				{
+					tBlocks[spot[k]].Translate(0.0f, 0.0f, 2.0f);
+				}
+			}
+			else
+			{
+				if (tBlocks[spot[k]].GetPosition().z >= 100.0)
+				{
+
+				}
+				else
+				{
+					if (tBlocks[spot[k + 1]].GetPosition().z >= 20)
 					{
-						std::iter_swap(spot.begin() + j, spot.begin() + k);
+						tBlocks[spot[k]].Translate(0.0f, 0.0f, 2.0f);
+					}
+				}
+
+			}
+		}
+		// When all of them has disappeared
+		if (tBlocks[spot[0]].GetPosition().z >= 60.0)
+		{
+			for (unsigned int j = 0; j < heig.size(); j++)
+			{
+				for (unsigned int k = j; k < heig.size(); k++)
+				{
+					if (spot[j]>spot[k])
+					{
+						std::iter_swap(heig.begin() + j, heig.begin() + k);
 					}
 				}
 			}
-			for (int k = 0; k < width; k++) 
+
+			for (int k = 0; k < (int)spot.size(); k++)
 			{
-				tBlocks.erase(tBlocks.begin()+spot[k]);
+				tBlocks.erase(tBlocks.begin() + spot[k]);
 			}
-			score += 100;
-			Reposition(i);
+			for (unsigned int i = 0; i < heig.size(); i++)
+			{
+				AddToScore();
+				Reposition(heig[i]);
+			}
+			spot.clear();
+			heig.clear();
+			lines = 0;
+
 		}
-		numOfBlocks = 0;
-		spot.clear();
 	}
 }
 void Tetris::Reposition(int yHieght)
@@ -367,7 +482,6 @@ void Tetris::Reposition(int yHieght)
 			tBlocks[i].Translate(0.0, -1.0, 0.0);
 		}
 	}
-	pChange = true;
 }
 void Tetris::CheckGameOver()
 {
@@ -387,9 +501,26 @@ void Tetris::EndGame()
 void Tetris::ResetGame()
 {
 	tBlocks.clear();
+	scoreBlocks.clear();
 	if (currentBlock != nullptr) { delete currentBlock; currentBlock = nullptr; }
 	if (futureBlock != nullptr) { delete futureBlock; futureBlock = nullptr; }
 
 	score = 0;
 	tTime = 0.0;
+}
+void Tetris::AddToScore()
+{
+	score += 1;
+	scoreRow += 1;
+	GameEntity block = GameEntity(*shapeBlock,"", *red);
+
+	if(score > (10 * scoreCol))
+	{
+		scoreRow = 1;
+		scoreCol += 1;
+	}
+
+	block.Translate(board[0].GetPosition().x - (2.0f * (float)scoreCol),height - (2.0f * (float)(scoreRow)), 0.0f);
+
+	scoreBlocks.push_back(block);
 }

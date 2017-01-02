@@ -7,18 +7,18 @@
 class Tetris
 {
 public:
-	Tetris(Mesh &shape, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr, int h, int w);
+	Tetris(Mesh &shape, GameEntity &gm, GameEntity &ovr, Material &r, Material &b, Material &g, Material &p, Material &lB, Material &y, Material &gr, int h, int w);
 	~Tetris();
 
 	void StartGame(int h, int w);
 	void DrawBoard(int height, int width);
-	void UpdateGame(float deltaTime);
+	void UpdateGame(float deltaTime, float totalTime);
 	void ResetGame();
 	void EndGame();
-	TetrisBlock* GenerateBlock();
 	std::vector<GameEntity>* GetBoard();
 	std::vector<GameEntity> GetTBlocks();
 	std::vector<GameEntity> GetPBlocks();
+	TetrisBlock* GenerateBlock();
 	void SetCurrentBlock(TetrisBlock *block);
 	void SetFutureBlock();
 	void MoveBlock();
@@ -30,6 +30,7 @@ public:
 	void PlaceBlock();
 	void CheckForLine();
 	void Reposition(int yHieght);
+	void AddToScore();
 	
 	Mesh* shapeBlock;
 	Material* red;
@@ -50,6 +51,8 @@ public:
 	int width;
 	float tTime;
 	float timeOfDescent;
+	int scoreCol;
+	int scoreRow;
 
 	bool pChange;
 	bool tChange;
@@ -59,6 +62,8 @@ public:
 	
 	std::vector<GameEntity> board;
 	std::vector<GameEntity> tBlocks;
+	std::vector<GameEntity> scoreBlocks;
+	std::vector<GameEntity> otherBlocks;
 
 private:
 

@@ -14,6 +14,9 @@ Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, Sim
 	device = &dev;
 	turnOn = 1;
 
+	scoreBlocks = &TetrisGame->scoreBlocks;
+	otherBlocks = &TetrisGame->otherBlocks;
+
 	instanceStuff= new InstanceStuff[1000];
 
 	D3D11_BUFFER_DESC instDesc = {};
@@ -104,6 +107,28 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 
 
 		DrawInstanceObject(context, cam, light, light2, (int)(allBlocks).size(),  allBlocks);
+		if (TetrisGame->gameOver == true) 
+		{
+			for (int i = 0; i < (int)otherBlocks->size(); i++)
+			{
+				vertexShader->SetMatrix4x4("world", (*otherBlocks)[i].GetWorldMatrix());
+				vertexShader->SetMatrix4x4("view", cam.viewMatrix);
+				vertexShader->SetMatrix4x4("projection", cam.projectionMatrix);
+				vertexShader->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
+
+				pixelShader->SetData("light", &light, sizeof(DirectionalLight));
+				pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
+				pixelShader->SetData("surfaceColor", &(*otherBlocks)[i].mat->surfaceColor, sizeof(XMFLOAT4));
+
+				vertexShader->CopyAllBufferData();
+				pixelShader->CopyAllBufferData();
+
+				vertexShader->SetShader();
+				pixelShader->SetShader();
+
+				(*otherBlocks)[i].Draw(context);
+			}
+		}
 	}
 	else
 	{
@@ -135,6 +160,14 @@ void Renderer::DrawInstanceObject(ID3D11DeviceContext* context, Camera cam, Dire
 {
 	if (instanceStuff != nullptr) { delete instanceStuff; instanceStuff = nullptr; }
 	instanceStuff = new InstanceStuff[numOfIn];
+	for (int i = 0; i < (int)scoreBlocks->size(); i++)
+	{
+		allBlocks.pop_back();
+	}
+	for (int i = 0; i < (int)scoreBlocks->size(); i++)
+	{
+		allBlocks.push_back((*scoreBlocks)[i]);
+	}
 
 	for (int i = 0; i < (int)(entity).size(); i++)
 	{
@@ -195,6 +228,10 @@ void Renderer::LoadAllBlocks()
 	for (int i = 0; i < (int)pBlocks.size(); i++)
 	{
 		allBlocks.push_back((pBlocks)[i]);
+	}
+	for (int i = 0; i < (int)scoreBlocks->size(); i++)
+	{
+		allBlocks.push_back((*scoreBlocks)[i]);
 	}
 }
 

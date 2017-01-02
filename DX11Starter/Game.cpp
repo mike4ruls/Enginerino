@@ -155,7 +155,7 @@ void Game::Init()
 	yellowMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(8.0f, 8.0f, 0.0f, 1.0f), *SVR, *sample);
 	greyMat = new Material(*pixelShader, *vertexShader, XMFLOAT4(5.0f, 5.0f, 5.0f, 1.0f), *SVR, *sample);
 
-	tetrisGame = new Tetris(*cube, *redMat, *blueMat, *greenMat, *purpleMat, *lightBlueMat, *yellowMat, *greyMat, 1, 1);
+	tetrisGame = new Tetris(*cube, GameEntity(*helix, "Square", *purpleMat), GameEntity(*helix, "Square", *purpleMat), *redMat, *blueMat, *greenMat, *purpleMat, *lightBlueMat, *yellowMat, *greyMat, 1, 1);
 
 	//block = new TetrisBlock(*cube,*blueMat,2,2);
 	//entities = block->GetEntities();
@@ -347,6 +347,8 @@ void Game::CreateBasicGeometry()
 	helix = new Mesh("Assets/Models/helix.obj", *device);
 	sphere = new Mesh("Assets/Models/sphere.obj", *device);
 	torus = new Mesh("Assets/Models/torus.obj", *device);
+	//game = new Mesh("Assets/Models/marte_isabel_game_obj.obj", *device);
+	//over = new Mesh("Assets/Models/marte_isabel_game_obj.obj", *device);
 
 }
 
@@ -430,7 +432,7 @@ void Game::Update(float deltaTime, float totalTime)
 	//Tetris Input Stuff (Start, End, Reset)
 	{
 	if (tetrisGame->gameStart) {
-		(tetrisGame)->UpdateGame(deltaTime);
+		(tetrisGame)->UpdateGame(deltaTime, totalTime);
 		if (tetrisGame->tChange)
 		{
 			render->tBlocks = (tetrisGame)->GetTBlocks();

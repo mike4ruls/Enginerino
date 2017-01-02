@@ -29,6 +29,8 @@ private:
 
 	float textTime;
 	float textSpeed;
+	float botTime;
+	float botTimeTalk;
 
 	Tetris* tetrisGame;
 };

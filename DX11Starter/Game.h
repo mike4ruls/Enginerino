@@ -84,6 +84,8 @@ private:
 	Mesh *helix = nullptr;
 	Mesh *sphere = nullptr;
 	Mesh *torus = nullptr;
+	Mesh *game = nullptr;
+	Mesh *over = nullptr;
 
 	// Buffers to hold actual geometry data
 	//ID3D11Buffer* vertexBuffer;

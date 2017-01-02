@@ -33,6 +33,8 @@ public:
 
 	bool gotBoard;
 	std::vector<GameEntity> *board;
+	std::vector<GameEntity> *scoreBlocks;
+	std::vector<GameEntity> *otherBlocks;
 	std::vector<GameEntity> tBlocks;
 	std::vector<GameEntity> pBlocks;
 

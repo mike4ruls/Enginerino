@@ -34,6 +34,7 @@ public:
 	void UpdateNewPos(WPARAM buttonState, int x, int y);
 	void IsClicking(WPARAM buttonState, int x, int y);
 
+	bool midClick;
 	bool noClick;
 	float distX;
 	float distY;

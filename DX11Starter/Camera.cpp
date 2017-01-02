@@ -26,6 +26,7 @@ Camera::Camera(int width, int height)
 	SetView();
 	SetRotation();
 	SetProject(width, height);
+	midClick = false;
 
 }
 
@@ -217,17 +218,19 @@ void Camera::IsClicking(WPARAM buttonState, int x, int y)
 void Camera::UpdateNewPos(WPARAM buttonState, int x, int y)
 {
 	Switch();
-	if (buttonState & 0x0001)
+	if (midClick)
 	{
-		
+		midClick = false;
 	}
 	else
 	{
 		newPosX += distX;
 		newPosY += distY;
+
+		newRotX += distX;
+		newRotY += distY;
 	}
-	newRotX += distX;
-	newRotY += distY;
+	
 	//printf("New X dist:%f, New Y dist:%f\n", newRotX, newRotY);
 	
 }
@@ -263,6 +266,7 @@ void Camera::OnMouseMove(WPARAM buttonState, int x, int y, float deltaTime)
 		}
 		else if(buttonState & 0x0010)
 		{
+			midClick = true;
 			if(distX < 0)
 			{
 				camP += (XMVector3Cross(camD, upp)*-distX*10) * deltaTime;

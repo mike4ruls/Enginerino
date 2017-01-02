@@ -10,6 +10,9 @@ ConsoleBuddy::ConsoleBuddy(Tetris &Tetris)
 	textSpeed = 0.08f;
 	botTalk = false;
 
+	botTime = 0.0;
+	botTimeTalk = 0.0;
+
 	previousState = false;
 	currentState = false;
 
@@ -44,7 +47,7 @@ void ConsoleBuddy::UpdateCB(float deltaTime)
 				}
 				tut += 1;
 				sentIndex = 0;
-				if (tut == 5)
+				if (tut == 6)
 				{
 					playerStatus += 1;
 				}
@@ -64,15 +67,20 @@ void ConsoleBuddy::UpdateCB(float deltaTime)
 		}
 		case 2:
 		{
-			sent = "So could reposition me in a place where you can see me and the game?(you can resize the game if you need space btw)";
+			sent = "So could resize my screen height so the bottom kind of meets my text please? Too lazy to do it my self";
 			break;
 		}
 		case 3:
 		{
-			sent = "AWESOME, thanks. Now I know you are here for Tetris right?";
+			sent = "Also could you place me somewhere you can see me and the game?(you can resize the game if you need space btw)";
 			break;
 		}
 		case 4:
+		{
+			sent = "AWESOME, thanks. Now I know you are here for Tetris right?";
+			break;
+		}
+		case 5:
 		{
 			sent = "Well say no more fam, press enter and i'll send you right to the game ^.^";
 			break;
@@ -84,6 +92,17 @@ void ConsoleBuddy::UpdateCB(float deltaTime)
 	//Tetris
 	case 1:
 	{
+		if(botTalk != true)
+		{
+			if(botTime >= botTimeTalk)
+			{
+				botTime = 0.0;
+
+				tetris += 1;
+				sentIndex = 0;
+				if (tetris == 2) { botTimeTalk = 5.0; }
+			}
+		}
 		if (GetAsyncKeyState(VK_RETURN))
 		{
 			currentState = true;
@@ -139,6 +158,7 @@ void ConsoleBuddy::UpdateCB(float deltaTime)
 			break;
 		}
 		}
+		botTime += 1 * deltaTime;
 		break;
 	}
 	//FreeRoam
