@@ -54,6 +54,9 @@
     <ClCompile Include="ConsoleBuddy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXCore.h">
@@ -98,6 +101,9 @@
     <ClInclude Include="ConsoleBuddy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelShader.hlsl">
@@ -116,6 +122,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="InstanceVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

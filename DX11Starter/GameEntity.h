@@ -5,7 +5,11 @@
 #include <d3d11.h>
 #include "Mesh.h"
 #include "Material.h"
-
+enum type
+{
+	gameObject,
+	terrainObject
+};
 
 class GameEntity
 {
@@ -27,6 +31,7 @@ public:
 	void SetScale(DirectX::XMFLOAT3 sca);
 
 	void ResetEntity();
+	type thisType;
 
 	//Transformation Methods
 	void Translate(float x, float y, float z);

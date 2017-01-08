@@ -58,6 +58,8 @@ Game::~Game()
 	if (skyVS != nullptr) { delete skyVS; skyVS = nullptr; }
 	if (instancePS != nullptr) { delete instancePS; instancePS = nullptr; }
 	if (instanceVS != nullptr) { delete instanceVS; instanceVS = nullptr; }
+	if (waterVS != nullptr) { delete waterVS; waterVS = nullptr; }
+	if (waterPS != nullptr) { delete waterPS; waterPS = nullptr; }
 
 	if (render != nullptr) { delete render; render = nullptr;}
 	if (mainCam != nullptr) { delete mainCam; mainCam = nullptr;}
@@ -80,6 +82,8 @@ Game::~Game()
 	if (sample != nullptr) { sample->Release(); sample = nullptr; }
 	if (skyRast != nullptr) { skyRast->Release(); skyRast = nullptr; }
 	if (skyDepth != nullptr) { skyDepth->Release(); skyDepth = nullptr; }
+
+	if (ter != nullptr) { delete ter; ter = nullptr;};
 }
 
 // --------------------------------------------------------
@@ -163,12 +167,14 @@ void Game::Init()
 	currentState = false;
 	previousState = false;
 
+	ter = new Terrain(100, 100, *blueMat, *device);
 	
 	entities.push_back(GameEntity(*helix, "Square", *defaultMat));
 	entities.push_back(GameEntity(*torus, "Square", *defaultMat));
 	entities.push_back(GameEntity(*cylinder, "Pentagon", *defaultMat));
 	entities.push_back(GameEntity(*sphere, "Star", *defaultMat));
 	entities.push_back(GameEntity(*cube, "Star", *defaultMat));
+	entities.push_back(ter->GetEntity());
 
 	(entities)[0].LoadMaterial(*purpleMat);
 	//(entities)[0].LoadMaterial(*redMat);
@@ -177,7 +183,7 @@ void Game::Init()
 	(entities)[2].LoadMaterial(*blueMat);
 	(entities)[3].LoadMaterial(*greenMat);
 
-	render = new Renderer(entities, *vertexShader, *pixelShader, *instanceVS, *instancePS, *tetrisGame, *device);
+	render = new Renderer(entities, *vertexShader, *pixelShader, *instanceVS, *instancePS, *waterVS, *waterPS,*tetrisGame, *device);
 	render->board = (tetrisGame)->GetBoard();
 	cB = new ConsoleBuddy(*tetrisGame, *render, *mainCam);
 
@@ -218,6 +224,14 @@ void Game::LoadShaders()
 	instancePS = new SimplePixelShader(device, context);
 	if (!instancePS->LoadShaderFile(L"Debug/InstancePS.cso"))
 		instancePS->LoadShaderFile(L"InstancePS.cso");
+
+	waterVS = new SimpleVertexShader(device, context);
+	if (!waterVS->LoadShaderFile(L"Debug/WaterVS.cso"))
+		waterVS->LoadShaderFile(L"WaterVS.cso");
+
+	waterPS = new SimplePixelShader(device, context);
+	if (!waterPS->LoadShaderFile(L"Debug/WaterPS.cso"))
+		waterPS->LoadShaderFile(L"WaterPS.cso");
 
 	// You'll notice that the code above attempts to load each
 	// compiled shader file (.cso) from two different relative paths.

@@ -1,14 +1,2 @@
-﻿  TetrisBlock.cpp
-  Tetris.cpp
-  SimpleShader.cpp
-  Renderer.cpp
-  Mesh.cpp
-  Material.cpp
-  Main.cpp
-  GameEntity.cpp
-  Game.cpp
-  DXCore.cpp
-  ConsoleBuddy.cpp
-  Camera.cpp
-  Generating Code...
+﻿  Terrain.cpp
   DX11Starter.vcxproj -> G:\PROGRAMMING\GRAPHICS ENGINE\DX11Starter\Debug\DX11Starter.exe

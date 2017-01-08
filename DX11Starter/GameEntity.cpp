@@ -20,6 +20,7 @@ GameEntity::GameEntity(Mesh &o, std::string n, Material &mt)
 	XMStoreFloat4x4(&worldMatrix, XMMatrixTranspose(W));
 
 	std::string name = n;
+	thisType = gameObject;
 }
 
 

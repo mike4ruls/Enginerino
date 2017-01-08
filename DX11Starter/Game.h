@@ -14,6 +14,7 @@
 #include "TetrisBlock.h"
 #include "Tetris.h"
 #include "ConsoleBuddy.h"
+#include "Terrain.h"
 
 class Game 
 	: public DXCore
@@ -72,6 +73,8 @@ private:
 	TetrisBlock* block = nullptr;
 	Tetris* tetrisGame = nullptr;
 
+	Terrain* ter = nullptr;
+
 	DirectionalLight light1;
 	DirectionalLight light2;
 
@@ -100,6 +103,9 @@ private:
 
 	SimpleVertexShader* instanceVS = nullptr;
 	SimplePixelShader* instancePS = nullptr;
+
+	SimpleVertexShader* waterVS = nullptr;
+	SimplePixelShader* waterPS = nullptr;
 
 	ID3D11ShaderResourceView* SVR = nullptr;
 	ID3D11ShaderResourceView* skyBoxSVR = nullptr;

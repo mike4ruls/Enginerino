@@ -2,13 +2,15 @@
 
 
 using namespace DirectX;
-Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, SimpleVertexShader &iv, SimplePixelShader &ip, Tetris &Tet, ID3D11Device &dev)
+Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, SimpleVertexShader &iv, SimplePixelShader &ip, SimpleVertexShader &wv, SimplePixelShader &wp, Tetris &Tet, ID3D11Device &dev)
 {
 	entities = &en;
 	vertexShader = &vShader;
 	pixelShader = &pShader;
 	instanceVS = &iv;
 	instancePS = &ip;
+	waterVS = &wv;
+	waterPS = &wp;
 	TetrisGame = &Tet;
 	gotBoard = false;
 	device = &dev;
@@ -136,25 +138,51 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 			turnOn = 1;
 			for (int i = 0; i < (int)(*entities).size(); i++)
 			{
-				vertexShader->SetMatrix4x4("world", (*entities)[i].GetWorldMatrix());
-				vertexShader->SetMatrix4x4("view", cam.viewMatrix);
-				vertexShader->SetMatrix4x4("projection", cam.projectionMatrix);
-				vertexShader->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
+				if((*entities)[i].thisType == terrainObject)
+				{
+					waterVS->SetMatrix4x4("world", (*entities)[i].GetWorldMatrix());
+					waterVS->SetMatrix4x4("view", cam.viewMatrix);
+					waterVS->SetMatrix4x4("projection", cam.projectionMatrix);
+					waterVS->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
 
-				pixelShader->SetData("light", &light, sizeof(DirectionalLight));
-				pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
-				pixelShader->SetData("surfaceColor", &(*entities)[i].mat->surfaceColor, sizeof(XMFLOAT4));
-				pixelShader->SetSamplerState("basicSampler", (*entities)[i].mat->GetSampler());
-				pixelShader->SetShaderResourceView("diffuseTexture", (*entities)[i].mat->GetSVR());
-				pixelShader->SetData("on", &turnOn, sizeof(int));
+					waterPS->SetData("light", &light, sizeof(DirectionalLight));
+					waterPS->SetData("light2", &light2, sizeof(DirectionalLight));
+					waterPS->SetData("surfaceColor", &(*entities)[i].mat->surfaceColor, sizeof(XMFLOAT4));
+					waterPS->SetSamplerState("basicSampler", (*entities)[i].mat->GetSampler());
+					waterPS->SetShaderResourceView("diffuseTexture", (*entities)[i].mat->GetSVR());
+					waterPS->SetData("on", &turnOn, sizeof(int));
 
-				vertexShader->CopyAllBufferData();
-				pixelShader->CopyAllBufferData();
+					waterVS->CopyAllBufferData();
+					waterPS->CopyAllBufferData();
 
-				vertexShader->SetShader();
-				pixelShader->SetShader();
+					waterVS->SetShader();
+					waterPS->SetShader();
 
-				(*entities)[i].Draw(context);
+					(*entities)[i].Draw(context);
+				}
+				else
+				{
+					vertexShader->SetMatrix4x4("world", (*entities)[i].GetWorldMatrix());
+					vertexShader->SetMatrix4x4("view", cam.viewMatrix);
+					vertexShader->SetMatrix4x4("projection", cam.projectionMatrix);
+					vertexShader->SetData("camPos", &cam.camPos, sizeof(XMFLOAT4));
+
+					pixelShader->SetData("light", &light, sizeof(DirectionalLight));
+					pixelShader->SetData("light2", &light2, sizeof(DirectionalLight));
+					pixelShader->SetData("surfaceColor", &(*entities)[i].mat->surfaceColor, sizeof(XMFLOAT4));
+					pixelShader->SetSamplerState("basicSampler", (*entities)[i].mat->GetSampler());
+					pixelShader->SetShaderResourceView("diffuseTexture", (*entities)[i].mat->GetSVR());
+					pixelShader->SetData("on", &turnOn, sizeof(int));
+
+					vertexShader->CopyAllBufferData();
+					pixelShader->CopyAllBufferData();
+
+					vertexShader->SetShader();
+					pixelShader->SetShader();
+
+					(*entities)[i].Draw(context);
+				}
+				
 			}
 		}
 	}

@@ -19,12 +19,15 @@ public:
 	SimpleVertexShader* instanceVS;
 	SimplePixelShader* instancePS;
 
+	SimpleVertexShader* waterVS;
+	SimplePixelShader* waterPS;
+
 	InstanceStuff* instanceStuff = nullptr;
 	ID3D11Buffer* instanceStuffBuff = nullptr;
 
 	Tetris* TetrisGame;
 
-	Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, SimpleVertexShader &iv, SimplePixelShader &ip, Tetris &Tet, ID3D11Device &dev);
+	Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, SimplePixelShader &pShader, SimpleVertexShader &iv, SimplePixelShader &ip, SimpleVertexShader &wv, SimplePixelShader &wp, Tetris &Tet, ID3D11Device &dev);
 	~Renderer();
 	void LoadAllBlocks();
 	ID3D11Device* device;
