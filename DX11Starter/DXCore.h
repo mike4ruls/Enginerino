@@ -7,6 +7,8 @@
 // We can include the correct library files here
 // instead of in Visual Studio settings if we want
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "DirectXTK.lib")
+#pragma comment(lib, "msvcprtd.lib")
 
 class DXCore
 {

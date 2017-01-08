@@ -143,7 +143,7 @@ void ConsoleBuddy::Script(float deltaTime)
 						{
 							Talk(sent);
 						}
-						tetrisGame->gameStart = false;
+						tetrisGame->EndGame();
 						tetris += 1;
 						sentIndex = 0;
 					}
@@ -245,7 +245,7 @@ void ConsoleBuddy::Script(float deltaTime)
 		}
 		case 2:
 		{
-			sent = "If you want to speed up the block that's falling use the 'DOWN' arrow key and press 'ENTER' to rotate the block";
+			sent = "If you want to speed up the block that's falling use the 'DOWN' arrow key and press 'ENTER'or'Z' to rotate the block";
 			break;
 		}
 		case 3:
@@ -319,6 +319,23 @@ void ConsoleBuddy::Script(float deltaTime)
 		if (free >= 12)
 		{
 
+		}
+		else if (free == 11) {
+			if (GetAsyncKeyState(VK_RETURN))
+			{
+				currentState = true;
+				if ((previousState != currentState))
+				{
+					if (sentIndex <= sent.size())
+					{
+						Talk(sent);
+					}
+					free += 1;
+					sentIndex = 0;
+					botTime = 0.0f;
+					botTimeTalk = 25.0f;
+				}
+			}
 		}
 		else
 		{
@@ -423,7 +440,7 @@ void ConsoleBuddy::Script(float deltaTime)
 		}
 		case 11:
 		{
-			sent = "-sigh- Just leave when ever you're ready, just do me a favor? ";
+			sent = "-sigh- Just quit the application and kill me when ever you're ready, but can you do me one favor? ";
 			break;
 		}
 		case 12:
@@ -480,27 +497,27 @@ void ConsoleBuddy::Talk(std::string sentance, float deltaTime)
 		}
 		else
 		{
-			if (tut == 3)
+			if (tut == 3 && playerStatus == 0)
 			{
 				printf("\n(--YES!!--)");
 			}
-			else if (tut == 4)
+			else if (tut == 4 && playerStatus == 0)
 			{
 				printf("\n(--LETS GET IT!--)");
 			}
-			else if (tetris == 4)
+			else if (tetris == 4 && playerStatus == 1)
 			{
 				printf("\n(Press 'Y' to start playing)");
 			}
-			else if (tetris == 5)
+			else if (tetris == 5 && playerStatus == 1)
 			{
-				printf("\n(Controls: {moving: 'DOWN' 'LEFT' 'RIGHT'} {rotating: 'ENTER'})");
+				printf("\n(Controls: {moving: 'DOWN' 'LEFT' 'RIGHT'} {rotating: 'ENTER' or 'Z'})");
 			}
-			else if (tetris == 8)
+			else if (tetris == 8 && playerStatus == 1)
 			{
 				printf("\n(Press 'TAB' For something special...)");
 			}
-			else if (tetris == 11)
+			else if (tetris == 11 && playerStatus == 1)
 			{
 				printf("\n(Press 'W' 'A' 'S' or 'D' For something cool...)");
 			}

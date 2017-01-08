@@ -225,7 +225,7 @@ void Tetris::MoveBlock()
 	}
 
 
-	if (GetAsyncKeyState(VK_RETURN))
+	if (GetAsyncKeyState(VK_RETURN) || GetAsyncKeyState('Z'))
 	{
 		currentState = true;
 		if (currentState != previousState) {
@@ -425,7 +425,7 @@ void Tetris::CheckForLine()
 				}
 				else
 				{
-					tBlocks[spot[k]].Translate(0.0f, 0.0f, 2.0f);
+					tBlocks[spot[k]].Translate(0.0f, 0.0f, 0.3f);
 				}
 			}
 			else
@@ -438,7 +438,7 @@ void Tetris::CheckForLine()
 				{
 					if (tBlocks[spot[k + 1]].GetPosition().z >= 20)
 					{
-						tBlocks[spot[k]].Translate(0.0f, 0.0f, 2.0f);
+						tBlocks[spot[k]].Translate(0.0f, 0.0f, 0.3f);
 					}
 				}
 
@@ -511,6 +511,9 @@ void Tetris::ResetGame()
 	
 	scoreCol = 1;
 	scoreRow = 0;
+
+	gameStart = false;
+	gameOver = true;
 
 	pChange = true;
 	tChange = true;

@@ -12,7 +12,7 @@ Renderer::Renderer(std::vector<GameEntity> &en, SimpleVertexShader &vShader, Sim
 	TetrisGame = &Tet;
 	gotBoard = false;
 	device = &dev;
-	turnOn = 1;
+	turnOn = 0;
 	freeRoam = false;
 
 	scoreBlocks = &TetrisGame->scoreBlocks;
@@ -41,7 +41,6 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 {
 	
 	if (TetrisGame->gameStart == true) {
-		turnOn = 0;
 		pixelShader->SetData("on", &turnOn, sizeof(int));
 
 
@@ -134,6 +133,7 @@ void Renderer::RenderUpdate(ID3D11DeviceContext* context, Camera cam, Directiona
 	else
 	{
 		if (freeRoam) {
+			turnOn = 1;
 			for (int i = 0; i < (int)(*entities).size(); i++)
 			{
 				vertexShader->SetMatrix4x4("world", (*entities)[i].GetWorldMatrix());

@@ -114,8 +114,8 @@ void Game::Init()
 	//Texture time boisssss
 	SVR = 0;
 	skyBoxSVR = 0;
-	CreateWICTextureFromFile(device, context, L"Textures/brick.jpg", 0, &SVR);
-	//DirectX::CreateWICTextureFromFile(device,context,L"Textures/harambe.jpg",0,&SVR);
+	//CreateWICTextureFromFile(device, context, L"Textures/brick.jpg", 0, &SVR);
+	CreateWICTextureFromFile(device, context, L"Textures/harambe.jpg", 0, &SVR);
 
 	LoadSkyBox();
 
@@ -470,6 +470,7 @@ void Game::Update(float deltaTime, float totalTime)
 		// Start game
 		if (GetAsyncKeyState('Y') || cB->playerStatus == 1)
 		{
+
 			(tetrisGame)->StartGame(30, 10);
 			render->LoadAllBlocks();
 			render->freeRoam = true;
